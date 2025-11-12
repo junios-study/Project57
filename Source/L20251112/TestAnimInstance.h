@@ -22,4 +22,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Anim)
 	float GroundSpeed = 0.f;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	uint8 bSprint : 1;
 };

@@ -51,4 +51,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Look(float Pitch, float Yaw);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Character)
+	uint8 bSprint : 1;
+
 };

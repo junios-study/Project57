@@ -2,16 +2,17 @@
 
 
 #include "TestAnimInstance.h"
-#include "Gameframework/Character.h"
+#include "TestCharacter.h"
 #include "Gameframework/CharacterMovementComponent.h"
 
 void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	ACharacter* Character = Cast<ACharacter>(TryGetPawnOwner());
+	ATestCharacter* Character = Cast<ATestCharacter>(TryGetPawnOwner());
 	if (Character)
 	{
 		GroundSpeed = Character->GetCharacterMovement()->Velocity.Size2D();
+		bSprint = Character->bSprint;
 	}
 }
