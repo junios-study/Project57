@@ -45,4 +45,10 @@ public:
 	}
 
 
+	UFUNCTION(BlueprintCallable)
+	void Move(float Forward, float Right);
+
+	UFUNCTION(BlueprintCallable)
+	void Look(float Pitch, float Yaw);
+
 };
