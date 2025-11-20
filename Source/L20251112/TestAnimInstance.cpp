@@ -16,3 +16,8 @@ void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bSprint = Character->bSprint;
 	}
 }
+
+void UTestAnimInstance::AnimNotify_SkeletonNotify()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AnimNotify_SkeletonNotify"));
+}
