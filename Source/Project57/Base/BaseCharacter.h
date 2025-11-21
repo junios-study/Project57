@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "TestCharacter.generated.h"
+#include "BaseCharacter.generated.h"
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -17,13 +17,13 @@ enum class EWeaponState : uint8
 
 
 UCLASS()
-class L20251112_API ATestCharacter : public ACharacter
+class PROJECT57_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ATestCharacter();
+	ABaseCharacter();
 
 protected:
 	// Called when the game starts or when spawned

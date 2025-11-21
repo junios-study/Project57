@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestCharacter.h"
+#include "BaseCharacter.h"
 #include "GameframeWork/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -10,7 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
-ATestCharacter::ATestCharacter()
+ABaseCharacter::ABaseCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,27 +28,27 @@ ATestCharacter::ATestCharacter()
 }
 
 // Called when the game starts or when spawned
-void ATestCharacter::BeginPlay()
+void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ATestCharacter::Tick(float DeltaTime)
+void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
-void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 
-void ATestCharacter::Move(float Forward, float Right)
+void ABaseCharacter::Move(float Forward, float Right)
 {
 	const FRotator CameraRotation =  GetController()->GetControlRotation();
 	const FRotator YawRotation = FRotator(0, CameraRotation.Yaw, 0);
@@ -65,7 +65,7 @@ void ATestCharacter::Move(float Forward, float Right)
 //	AddMovementInput(FVector(Forward, Right, 0));
 }
 
-void ATestCharacter::Look(float Pitch, float Yaw)
+void ABaseCharacter::Look(float Pitch, float Yaw)
 {
 	AddControllerPitchInput(Pitch);
 	AddControllerYawInput(Yaw);

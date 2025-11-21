@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
-#include "TestPC.generated.h"
+#include "GameFramework/GameModeBase.h"
+#include "BaseGM.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class L20251112_API ATestPC : public APlayerController
+class PROJECT57_API ABaseGM : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	ATestPC();
-	
+	ABaseGM();
 };

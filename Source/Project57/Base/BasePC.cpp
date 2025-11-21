@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestPC.h"
+#include "BasePC.h"
 
-ATestPC::ATestPC()
+ABasePC::ABasePC()
 {
 }

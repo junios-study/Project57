@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestAnimInstance.h"
-#include "TestCharacter.h"
+#include "BaseAnimInstance.h"
+#include "BaseCharacter.h"
 #include "Gameframework/CharacterMovementComponent.h"
 #include "KismetAnimationLibrary.h"
 
-void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	ATestCharacter* Character = Cast<ATestCharacter>(TryGetPawnOwner());
+	ABaseCharacter* Character = Cast<ABaseCharacter>(TryGetPawnOwner());
 	if (Character)
 	{
 		GroundSpeed = Character->GetCharacterMovement()->Velocity.Size2D();
@@ -42,7 +42,7 @@ void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-void UTestAnimInstance::AnimNotify_SkeletonNotify()
+void UBaseAnimInstance::AnimNotify_SkeletonNotify()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AnimNotify_SkeletonNotify"));
 }

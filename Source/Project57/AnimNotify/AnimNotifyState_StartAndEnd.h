@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class L20251112_API UAnimNotifyState_StartAndEnd : public UAnimNotifyState
+class PROJECT57_API UAnimNotifyState_StartAndEnd : public UAnimNotifyState
 {
 	GENERATED_BODY()
 	

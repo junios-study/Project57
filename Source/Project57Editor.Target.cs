@@ -3,15 +3,15 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class L20251112EditorTarget : TargetRules
+public class Project57EditorTarget : TargetRules
 {
-	public L20251112EditorTarget(TargetInfo Target) : base(Target)
+	public Project57EditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 
 
-        ExtraModuleNames.AddRange( new string[] { "L20251112" } );
+        ExtraModuleNames.AddRange( new string[] { "Project57" } );
 	}
 }

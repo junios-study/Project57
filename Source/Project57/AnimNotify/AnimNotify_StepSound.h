@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class L20251112_API UAnimNotify_StepSound : public UAnimNotify
+class PROJECT57_API UAnimNotify_StepSound : public UAnimNotify
 {
 	GENERATED_BODY()
 

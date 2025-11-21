@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "TestCharacter.h"
-#include "TestAnimInstance.generated.h"
+#include "BaseCharacter.h"
+#include "BaseAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class L20251112_API UTestAnimInstance : public UAnimInstance
+class PROJECT57_API UBaseAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
