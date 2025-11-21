@@ -37,6 +37,8 @@ void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		}
 
 		CurrentLeanAngle = FMath::FInterpTo(CurrentLeanAngle, TargetLeanAngle, DeltaSeconds, 8.0f);
+
+		WeaponState = Character->WeaponState;
 	}
 }
 

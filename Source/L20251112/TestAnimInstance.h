@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "TestCharacter.h"
 #include "TestAnimInstance.generated.h"
 
 /**
@@ -49,4 +50,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	float CurrentLeanAngle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	EWeaponState WeaponState = EWeaponState::Unarmed;
 };
