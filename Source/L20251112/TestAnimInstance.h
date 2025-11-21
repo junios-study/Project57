@@ -30,4 +30,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	float Direction;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	float AimYaw;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	float AimPitch;
 };

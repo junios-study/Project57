@@ -16,6 +16,8 @@ void UTestAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		GroundSpeed = Character->GetCharacterMovement()->Velocity.Size2D();
 		bSprint = Character->bSprint;
 		Direction = UKismetAnimationLibrary::CalculateDirection(Character->GetCharacterMovement()->Velocity, Character->GetActorRotation());
+		AimYaw = Character->GetBaseAimRotation().Yaw;
+		AimPitch = Character->GetBaseAimRotation().Pitch;
 	}
 }
 

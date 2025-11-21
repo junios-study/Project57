@@ -39,8 +39,6 @@ void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Anim Instance 값 넣는건 비추, 애님인스턴스(애님블프가 가져가게 만듬)
-
 }
 
 // Called to bind functionality to input
