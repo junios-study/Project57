@@ -29,3 +29,9 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
+void AWeaponBase::Reload()
+{
+	CurrentBulletCount = MaxBulletCount;
+	UE_LOG(LogTemp, Warning, TEXT("Reload %d"), CurrentBulletCount);
+}
+

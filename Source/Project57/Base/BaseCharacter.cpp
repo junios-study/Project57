@@ -109,3 +109,12 @@ void ABaseCharacter::HitReaction()
 
 	PlayAnimMontage(HitMontage, 1.0, FName(*SectionName) );
 }
+
+void ABaseCharacter::ReloadWeapon()
+{
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		ChildWeapon->Reload();
+	}
+}

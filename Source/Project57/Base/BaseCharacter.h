@@ -100,4 +100,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HitReaction();
 
+	UFUNCTION(BlueprintCallable)
+	void ReloadWeapon();
+
 };
