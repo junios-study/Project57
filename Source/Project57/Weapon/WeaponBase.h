@@ -42,9 +42,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	int32 CurrentBulletCount = 100;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	TObjectPtr<UAnimMontage> FireMontage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	TObjectPtr<UAnimMontage> ReloadMontage;
 };

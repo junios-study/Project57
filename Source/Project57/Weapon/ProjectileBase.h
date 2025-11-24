@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
+class UProjectileMovementComponent;
+class UStaticMeshComponent;
+class UBoxComponent;
+
 UCLASS()
 class PROJECT57_API AProjectileBase : public AActor
 {
@@ -23,4 +27,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
+	TObjectPtr<UBoxComponent> Box;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
+	TObjectPtr<UProjectileMovementComponent> Movement;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component)
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	float Damage = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TSubclassOf<UDamageType> HitDamage;
 };
