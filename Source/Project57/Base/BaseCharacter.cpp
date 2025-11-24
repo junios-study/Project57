@@ -102,3 +102,10 @@ void ABaseCharacter::Reload()
 		PlayAnimMontage(ChildWeapon->ReloadMontage);
 	}
 }
+
+void ABaseCharacter::HitReaction()
+{
+	FString SectionName = FString::Printf(TEXT("%d"), FMath::RandRange(1, 8));
+
+	PlayAnimMontage(HitMontage, 1.0, FName(*SectionName) );
+}
