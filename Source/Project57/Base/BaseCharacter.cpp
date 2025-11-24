@@ -6,8 +6,13 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/ChildActorComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "EnhancedInputComponent.h"
+#include "../Weapon/WeaponBase.h"
+
+
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -25,13 +30,23 @@ ABaseCharacter::ABaseCharacter()
 
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.0f, 0));
 
+	Weapon = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh());
+
 }
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//무기 집으면 잡게 이동
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
+	}
+
 }
 
 // Called every frame
@@ -45,6 +60,14 @@ void ABaseCharacter::Tick(float DeltaTime)
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	UEnhancedInputComponent* UIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (UIC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Reload Setup"));
+		UIC->BindAction(IA_Reload, ETriggerEvent::Completed, this,
+			&ABaseCharacter::Reload);
+	}
 
 }
 
@@ -69,4 +92,13 @@ void ABaseCharacter::Look(float Pitch, float Yaw)
 {
 	AddControllerPitchInput(Pitch);
 	AddControllerYawInput(Yaw);
+}
+
+void ABaseCharacter::Reload()
+{
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		PlayAnimMontage(ChildWeapon->ReloadMontage);
+	}
 }
