@@ -35,3 +35,9 @@ void AWeaponBase::Reload()
 	UE_LOG(LogTemp, Warning, TEXT("Reload %d"), CurrentBulletCount);
 }
 
+void AWeaponBase::Fire()
+{
+	CurrentBulletCount--;
+	UE_LOG(LogTemp, Warning, TEXT("Fire %d"), CurrentBulletCount);
+}
+
