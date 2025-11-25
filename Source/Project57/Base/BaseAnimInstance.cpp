@@ -41,6 +41,8 @@ void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		WeaponState = Character->WeaponState;
 
 		bIsCrouched = Character->bIsCrouched;
+
+		bIsFalling = Character->GetCharacterMovement()->IsFalling();
 	}
 }
 

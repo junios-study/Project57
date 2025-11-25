@@ -3,27 +3,58 @@
 
 #include "BaseHUD.h"
 #include "Engine/Canvas.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 
 void ABaseHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	int32 UnitX = Canvas->SizeX / 100;
-	int32 UnitY = Canvas->SizeY / 100;
+	int32 Unit = Canvas->SizeX / 100;
+	
 	int32 CenterX = Canvas->SizeX / 2;
 	int32 CenterY = Canvas->SizeY / 2;
-	int32 DrawSize = 4;
+	int32 DrawSize = Unit * 2;
 
-	Draw2DLine(CenterX - (UnitX * DrawSize),
+	float CurrentSpeed = 0.f;
+	float MaxSpeed = 0.0f;
+	float GapRatio = 0.0f;
+	int32 Gap = Unit * 3;
+
+
+	ACharacter* Pawn = Cast<ACharacter>(GetOwningPawn());
+
+	if (Pawn)
+	{
+		MaxSpeed = Pawn->GetCharacterMovement()->GetMaxSpeed();
+		CurrentSpeed = Pawn->GetCharacterMovement()->Velocity.Size2D();
+		GapRatio = CurrentSpeed / MaxSpeed;
+	}
+	Gap = (int32)((float)Gap * GapRatio);
+
+
+	Draw2DLine(CenterX - Unit - Gap,
 		CenterY,
-		CenterX + (UnitX * DrawSize),
+		CenterX - Gap,
+		CenterY,
+		FColor::Red);
+
+	Draw2DLine(CenterX + Gap,
+		CenterY,
+		CenterX + Unit + Gap,
 		CenterY,
 		FColor::Red);
 
 	Draw2DLine(CenterX,
-		CenterY - (UnitX * DrawSize),
+		CenterY - Unit - Gap,
 		CenterX,
-		CenterY + (UnitX * DrawSize),
+		CenterY - Gap,
+		FColor::Red);
+
+	Draw2DLine(CenterX,
+		CenterY + Gap,
+		CenterX,
+		CenterY + Unit + Gap,
 		FColor::Red);
 }
 
