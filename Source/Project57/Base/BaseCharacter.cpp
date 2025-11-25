@@ -7,7 +7,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ChildActorComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "EnhancedInputComponent.h"
 #include "../Weapon/WeaponBase.h"
@@ -50,6 +49,7 @@ void ABaseCharacter::BeginPlay()
 	{
 		ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
 		WeaponState = EWeaponState::Pistol;
+		ChildWeapon->SetOwner(this);
 	}
 
 }
@@ -71,8 +71,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		UIC->BindAction(IA_Reload, ETriggerEvent::Completed, this,
 			&ABaseCharacter::Reload);
-		UIC->BindAction(IA_Fire, ETriggerEvent::Triggered, this,
-			&ABaseCharacter::DoFire);
+
+		UIC->BindAction(IA_Fire, ETriggerEvent::Started, this,
+			&ABaseCharacter::StartFire);
+		UIC->BindAction(IA_Fire, ETriggerEvent::Completed, this,
+			&ABaseCharacter::StopFire);
 	}
 
 }
@@ -111,88 +114,26 @@ void ABaseCharacter::Reload()
 
 void ABaseCharacter::DoFire()
 {
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	if (PC)
-	{
-		int32 SizeX = 0;
-		int32 SizeY = 0;
-		int32 CenterX = 0;
-		int32 CenterY = 0;
-		FVector WorldDirection;
-		FVector WorldLocation;
-		FVector CameraLocation;
-		FRotator CameraRotation;
-
-		PC->GetViewportSize(SizeX, SizeY);
-		CenterX = SizeX / 2;
-		CenterY = SizeY / 2;
-		
-		PC->DeprojectScreenPositionToWorld((float)CenterX, (float)CenterY,
-			WorldLocation, WorldDirection);
-
-		PC->GetPlayerViewPoint(CameraLocation, CameraRotation);
-
-		FVector Start = CameraLocation;
-		FVector End = CameraLocation + WorldDirection * 100000.0f;
-
-		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
-		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
-		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody));
-
-		TArray<AActor*> IngnoreActors;
-		FHitResult HitResult;
-
-		bool bResult = UKismetSystemLibrary::LineTraceSingleForObjects(
-			GetWorld(),
-			Start,
-			End,
-			ObjectTypes,
-			true,
-			IngnoreActors,
-			EDrawDebugTrace::ForDuration,
-			HitResult,
-			true
-		);
-
-		if (bResult)
-		{ 
-			//RPG 
-			//UGameplayStatics::ApplyDamage(HitResult.GetActor(),
-			//	50,
-			//	GetController(),
-			//	this,
-			//	UBaseDamageType::StaticClass()
-			//);
-
-			//ÃÑ½î´Â µ¥¹ÌÁö
-			UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
-				10,
-				-HitResult.ImpactNormal,
-				HitResult,
-				GetController(),
-				this,
-				UBaseDamageType::StaticClass()
-			);
-
-			////¹üÀ§ °ø°Ý, ÆøÅº
-			//UGameplayStatics::ApplyRadialDamage(HitResult.GetActor(),
-			//	10,
-			//	HitResult.ImpactPoint,
-			//	300.0f,
-			//	UBaseDamageType::StaticClass(),
-			//	IngnoreActors,
-			//	this,
-			//	GetController(),
-			//	true
-			//);
-		}
-
-	}
 	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
 	if (ChildWeapon)
 	{
 		ChildWeapon->Fire();
+	}
+}
+
+void ABaseCharacter::StartFire()
+{
+	bIsFire = true;
+	DoFire();
+}
+
+void ABaseCharacter::StopFire()
+{
+	bIsFire = false;
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		ChildWeapon->StopFire();
 	}
 }
 
