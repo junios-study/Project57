@@ -165,35 +165,35 @@ void ABaseCharacter::DoFire()
 			//	UBaseDamageType::StaticClass()
 			//);
 
-			////ÃÑ½î´Â µ¥¹ÌÁö
-			//UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
-			//	50,
-			//	-HitResult.ImpactNormal,
-			//	HitResult,
-			//	GetController(),
-			//	this,
-			//	UBaseDamageType::StaticClass()
-			//);
+			//ÃÑ½î´Â µ¥¹ÌÁö
+			UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
+				10,
+				-HitResult.ImpactNormal,
+				HitResult,
+				GetController(),
+				this,
+				UBaseDamageType::StaticClass()
+			);
 
 			////¹üÀ§ °ø°Ý, ÆøÅº
-			UGameplayStatics::ApplyRadialDamage(HitResult.GetActor(),
-				50,
-				HitResult.ImpactPoint,
-				300.0f,
-				UBaseDamageType::StaticClass(),
-				IngnoreActors,
-				this,
-				GetController(),
-				true
-			);
+			//UGameplayStatics::ApplyRadialDamage(HitResult.GetActor(),
+			//	10,
+			//	HitResult.ImpactPoint,
+			//	300.0f,
+			//	UBaseDamageType::StaticClass(),
+			//	IngnoreActors,
+			//	this,
+			//	GetController(),
+			//	true
+			//);
 		}
 
 	}
-	//AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
-	//if (ChildWeapon)
-	//{
-	//	ChildWeapon->Fire();
-	//}
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		ChildWeapon->Fire();
+	}
 }
 
 void ABaseCharacter::HitReaction()
@@ -216,7 +216,10 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	//
+	if (CurrentHP <= 0)
+	{
+		return DamageAmount;
+	}
 
 	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
 	{
@@ -244,12 +247,35 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		UE_LOG(LogTemp, Warning, TEXT("Damage %f"), DamageAmount);
 	}
 
+	DoHitReact();
+
 
 
 	if (CurrentHP <= 0)
 	{
 		//Á×´Â´Ù. ¾Ö´Ô ¸ùÅ¸ÁÖ Àç»ý
+		//³×Æ®¿öÅ© ÇÒ·Á¸é ´Ù RPC·Î ÀÛ¾÷ÇØ µÊ
+		DoDead();
 	}
 
-	return 0.0f;
+	return DamageAmount;
+}
+
+void ABaseCharacter::DoDeadEnd()
+{
+	GetController()->SetActorEnableCollision(false);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetSimulatePhysics(true);
+}
+
+void ABaseCharacter::DoDead()
+{
+	FName SectionName = FName(FString::Printf(TEXT("%d"), FMath::RandRange(1, 6)));
+	PlayAnimMontage(DeathMontage, 1.0f, SectionName);
+}
+
+void ABaseCharacter::DoHitReact()
+{
+	FName SectionName = FName(FString::Printf(TEXT("%d"), FMath::RandRange(1, 8)));
+	PlayAnimMontage(HitMontage, 1.0f, SectionName);
 }

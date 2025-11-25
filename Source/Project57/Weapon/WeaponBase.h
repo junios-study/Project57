@@ -53,4 +53,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TObjectPtr<USoundBase> FireSound;
 };
