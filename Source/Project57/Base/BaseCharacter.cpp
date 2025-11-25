@@ -12,6 +12,9 @@
 #include "EnhancedInputComponent.h"
 #include "../Weapon/WeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "../Weapon/BaseDamageType.h"
+#include "Engine/DamageEvents.h"
 
 
 
@@ -153,11 +156,37 @@ void ABaseCharacter::DoFire()
 		);
 
 		if (bResult)
-		{
-			//HitResult.GetActor();
+		{ 
+			//RPG 
+			//UGameplayStatics::ApplyDamage(HitResult.GetActor(),
+			//	50,
+			//	GetController(),
+			//	this,
+			//	UBaseDamageType::StaticClass()
+			//);
+
+			////ÃÑ½î´Â µ¥¹ÌÁö
+			//UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
+			//	50,
+			//	-HitResult.ImpactNormal,
+			//	HitResult,
+			//	GetController(),
+			//	this,
+			//	UBaseDamageType::StaticClass()
+			//);
+
+			////¹üÀ§ °ø°Ý, ÆøÅº
+			UGameplayStatics::ApplyRadialDamage(HitResult.GetActor(),
+				50,
+				HitResult.ImpactPoint,
+				300.0f,
+				UBaseDamageType::StaticClass(),
+				IngnoreActors,
+				this,
+				GetController(),
+				true
+			);
 		}
-
-
 
 	}
 	//AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
@@ -181,4 +210,46 @@ void ABaseCharacter::ReloadWeapon()
 	{
 		ChildWeapon->Reload();
 	}
+}
+
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	//
+
+	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
+	{
+		FPointDamageEvent* Event = (FPointDamageEvent*)(&DamageEvent);
+		if (Event)
+		{
+			CurrentHP -= DamageAmount;
+
+			 UE_LOG(LogTemp, Warning, TEXT("Point Damage %f %s"), DamageAmount, *(Event->HitInfo.BoneName.ToString()));
+		}
+	}
+	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
+	{
+		FRadialDamageEvent* Event = (FRadialDamageEvent*)(&DamageEvent);
+		if (Event)
+		{
+			CurrentHP -= DamageAmount;
+
+			UE_LOG(LogTemp, Warning, TEXT("Radial Damage %f %s"), DamageAmount, *Event->DamageTypeClass->GetName());
+		}
+	}
+	else //(DamageEvent.IsOfType(FDamageEvent::ClassID))
+	{
+		CurrentHP -= DamageAmount;
+		UE_LOG(LogTemp, Warning, TEXT("Damage %f"), DamageAmount);
+	}
+
+
+
+	if (CurrentHP <= 0)
+	{
+		//Á×´Â´Ù. ¾Ö´Ô ¸ùÅ¸ÁÖ Àç»ý
+	}
+
+	return 0.0f;
 }
