@@ -232,6 +232,8 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 			EquipItem(PickedUpItem);
 			break;
 		}
+
+		PickedUpItem->Destroy();
 	}
 }
 
