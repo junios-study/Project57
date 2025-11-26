@@ -226,9 +226,10 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 		//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		//SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 
-		AWeaponBase* ChildWeapon = GetWorld()->SpawnActor<AWeaponBase>(PickedUpItem->ItemTemplate, GetActorTransform());
 
-		//장작하는 아이템, 먹는거냐, 사용하는거냐?
+		Weapon->SetChildActorClass(PickedUpItem->ItemTemplate);
+		AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+
 		if (ChildWeapon)
 		{
 			ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
