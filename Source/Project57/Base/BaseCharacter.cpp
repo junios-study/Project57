@@ -220,20 +220,46 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 
 	if (PickedUpItem)
 	{
-		//FActorSpawnParameters SpawnParams;
-		//SpawnParams.Owner = this;
-		//SpawnParams.Instigator = this;
-		//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		//SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
+		switch (PickedUpItem->ItemType)
+		{
+		case EItemType::Use:
+			UseItem(PickedUpItem);
+			break;
+		case EItemType::Eat:
+			EatItem(PickedUpItem);
+			break;
+		case EItemType::Equip:
+			EquipItem(PickedUpItem);
+			break;
+		}
+	}
+}
 
+void ABaseCharacter::EatItem(APickupItemBase* PickedUpItem)
+{
+}
 
-		Weapon->SetChildActorClass(PickedUpItem->ItemTemplate);
-		AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+void ABaseCharacter::UseItem(APickupItemBase* PickedUpItem)
+{
+}
 
-		if (ChildWeapon)
+void ABaseCharacter::EquipItem(APickupItemBase* PickedUpItem)
+{
+	Weapon->SetChildActorClass(PickedUpItem->ItemTemplate);
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+
+	if (ChildWeapon)
+	{
+		if (ChildWeapon->Name.Compare(TEXT("Pistol")) == 0)
 		{
 			ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
 			WeaponState = EWeaponState::Pistol;
+			ChildWeapon->SetOwner(this);
+		}
+		else if(ChildWeapon->Name.Compare(TEXT("Rifle")) == 0)
+		{
+			ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
+			WeaponState = EWeaponState::Rifle;
 			ChildWeapon->SetOwner(this);
 		}
 	}

@@ -144,4 +144,10 @@ public:
 	UFUNCTION()
 	void ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
+	void EatItem(class APickupItemBase* PickedUpItem);
+
+	void UseItem(class APickupItemBase* PickedUpItem);
+
+	void EquipItem(class APickupItemBase* PickedUpItem);
+
 };
