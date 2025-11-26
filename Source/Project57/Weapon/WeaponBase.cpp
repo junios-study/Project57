@@ -60,8 +60,6 @@ void AWeaponBase::Fire()
 
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 
-	ensure(Character);
-	//check(Character);
 	if (!Character)
 	{
 		return;

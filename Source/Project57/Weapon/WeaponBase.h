@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../Base/ItemBase.h"
 #include "WeaponBase.generated.h"
 
 class USkeletalMeshComponent;
@@ -11,7 +12,7 @@ class AProjectileBase;
 class UAnimMontage;
 
 UCLASS()
-class PROJECT57_API AWeaponBase : public AActor
+class PROJECT57_API AWeaponBase : public AItemBase
 {
 	GENERATED_BODY()
 	

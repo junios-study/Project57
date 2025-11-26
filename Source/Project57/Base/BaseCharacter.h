@@ -139,4 +139,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DoHitReact();
+
+
+	UFUNCTION()
+	void ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
 };

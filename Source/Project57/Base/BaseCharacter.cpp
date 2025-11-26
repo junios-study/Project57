@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "../Weapon/BaseDamageType.h"
 #include "Engine/DamageEvents.h"
+#include "PickupItemBase.h"
 
 
 
@@ -43,15 +44,7 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//무기 집으면 잡게 이동
-	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
-	if (ChildWeapon)
-	{
-		ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
-		WeaponState = EWeaponState::Pistol;
-		ChildWeapon->SetOwner(this);
-	}
-
+	OnActorBeginOverlap.AddDynamic(this, &ABaseCharacter::ProcessBeginOverlap);
 }
 
 // Called every frame
@@ -219,4 +212,28 @@ void ABaseCharacter::DoHitReact()
 {
 	FName SectionName = FName(FString::Printf(TEXT("%d"), FMath::RandRange(1, 8)));
 	PlayAnimMontage(HitMontage, 1.0f, SectionName);
+}
+
+void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	APickupItemBase* PickedUpItem = Cast<APickupItemBase>(OtherActor);
+
+	if (PickedUpItem)
+	{
+		//FActorSpawnParameters SpawnParams;
+		//SpawnParams.Owner = this;
+		//SpawnParams.Instigator = this;
+		//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		//SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
+
+		AWeaponBase* ChildWeapon = GetWorld()->SpawnActor<AWeaponBase>(PickedUpItem->ItemTemplate, GetActorTransform());
+
+		//장작하는 아이템, 먹는거냐, 사용하는거냐?
+		if (ChildWeapon)
+		{
+			ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
+			WeaponState = EWeaponState::Pistol;
+			ChildWeapon->SetOwner(this);
+		}
+	}
 }
