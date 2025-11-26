@@ -16,13 +16,8 @@ void ABasePCM::UpdateCamera(float DeltaTime)
 
 	if (Pawn)
 	{
-		if (Pawn->bIsIronSight)
-		{
-			SetFOV(60.f);
-		}
-		else
-		{
-			SetFOV(90.f);
-		}
+		float TargetFOV = Pawn->bIsIronSight ? IronsightFOV : NormalFOV;
+		float CurrentFOV = FMath::FInterpTo(GetFOVAngle(), TargetFOV, DeltaTime, ZoomSpeed);
+		SetFOV(CurrentFOV);
 	}
 }
