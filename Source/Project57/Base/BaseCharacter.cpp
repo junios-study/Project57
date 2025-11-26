@@ -69,6 +69,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 			&ABaseCharacter::StartFire);
 		UIC->BindAction(IA_Fire, ETriggerEvent::Completed, this,
 			&ABaseCharacter::StopFire);
+
+		UIC->BindAction(IA_IronSight, ETriggerEvent::Started, this,
+			&ABaseCharacter::StartIronSight);
+		UIC->BindAction(IA_IronSight, ETriggerEvent::Completed, this,
+			&ABaseCharacter::StopIronSight);
 	}
 
 }
@@ -222,7 +227,7 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 	{
 		switch (PickedUpItem->ItemType)
 		{
-		case EItemType::Use:
+		case EItemType::Use: //Game Ability System
 			UseItem(PickedUpItem);
 			break;
 		case EItemType::Eat:
@@ -233,7 +238,11 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 			break;
 		}
 
-		PickedUpItem->Destroy();
+		if (!PickedUpItem->bIsInfinity)
+		{
+			PickedUpItem->Destroy();
+		}
+	
 	}
 }
 
@@ -264,5 +273,23 @@ void ABaseCharacter::EquipItem(APickupItemBase* PickedUpItem)
 			WeaponState = EWeaponState::Rifle;
 			ChildWeapon->SetOwner(this);
 		}
+		else if (ChildWeapon->Name.Compare(TEXT("GrenadeLauncer")) == 0)
+		{
+			ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
+			WeaponState = EWeaponState::Rifle;
+			//WeaponState = EWeaponState::GrenadeLauncer;
+			ChildWeapon->SetOwner(this);
+		}
 	}
 }
+
+void ABaseCharacter::StartIronSight()
+{
+	bIsIronSight = true;
+}
+
+void ABaseCharacter::StopIronSight()
+{
+	bIsIronSight = false;
+}
+

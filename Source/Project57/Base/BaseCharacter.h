@@ -14,7 +14,7 @@ enum class EWeaponState : uint8
 	Unarmed = 0 UMETA(DisplayName = "Unarmed"),
 	Pistol = 10 UMETA(DisplayName = "Pistol"),
 	Rifle = 20 UMETA(DisplayName = "Rifle"),
-	Launcher = 30 UMETA(DisplayName = "Launcher")
+	GrenadeLauncer = 30 UMETA(DisplayName = "GrenadeLauncer")
 };
 
 
@@ -108,7 +108,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	TObjectPtr<UInputAction> IA_Fire;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	TObjectPtr<UInputAction> IA_IronSight;
 
+	
 
 	UFUNCTION(BlueprintCallable)
 	void HitReaction();
@@ -125,6 +128,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	uint8 bIsFire : 1 = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	uint8 bIsIronSight : 1 = false;
 
 
 
@@ -149,5 +155,9 @@ public:
 	void UseItem(class APickupItemBase* PickedUpItem);
 
 	void EquipItem(class APickupItemBase* PickedUpItem);
+
+	void StartIronSight();
+
+	void StopIronSight();
 
 };
