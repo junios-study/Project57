@@ -11,6 +11,7 @@
 #include "GameFramework/Character.h"
 #include "TimerManager.h"
 #include "ProjectileBase.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 
@@ -66,10 +67,6 @@ void AWeaponBase::Fire()
 		return;
 	}
 
-	FTransform SpawnTransform = Mesh->GetSocketTransform(TEXT("Muzzle"));
-
-	GetWorld()->SpawnActor<AProjectileBase>(ProjectileTemplate, SpawnTransform);
-
 	APlayerController* PC = Cast<APlayerController>(Character->GetController());
 	if (PC)
 	{
@@ -110,44 +107,22 @@ void AWeaponBase::Fire()
 			ObjectTypes,
 			true,
 			IngnoreActors,
-			EDrawDebugTrace::ForDuration,
+			EDrawDebugTrace::None,
 			HitResult,
 			true
 		);
 
-		if (bResult)
-		{
-			//RPG 
-			//UGameplayStatics::ApplyDamage(HitResult.GetActor(),
-			//	50,
-			//	PC,
-			//	this,
-			//	UBaseDamageType::StaticClass()
-			//);
+		FVector SpawnLocation = Mesh->GetSocketLocation(TEXT("Muzzle"));
+		FVector TargetLocation = bResult ? HitResult.ImpactPoint : End;
+		FVector BulletDirection = (TargetLocation - SpawnLocation).GetSafeNormal();
 
-			//ÃÑ½î´Â µ¥¹ÌÁö
-			UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
-				10,
-				-HitResult.ImpactNormal,
-				HitResult,
-				PC,
-				this,
-				UBaseDamageType::StaticClass()
-			);
+		FRotator AimRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, TargetLocation + (UKismetMathLibrary::RandomUnitVector() * 0.3f));
 
-			////¹üÀ§ °ø°Ý, ÆøÅº
-			//UGameplayStatics::ApplyRadialDamage(HitResult.GetActor(),
-			//	10,
-			//	HitResult.ImpactPoint,
-			//	300.0f,
-			//	UBaseDamageType::StaticClass(),
-			//	IngnoreActors,
-			//	this,
-			//	PC,
-			//	true
-			//);
-		}
+		FTransform SpawnTransform(AimRotation, SpawnLocation, FVector::OneVector);
 
+		GetWorld()->SpawnActor<AProjectileBase>(ProjectileTemplate, SpawnTransform);
+
+		Character->AddControllerPitchInput(-0.05f);
 	}
 
 	CurrentBulletCount--;
