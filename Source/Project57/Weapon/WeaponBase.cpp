@@ -112,16 +112,24 @@ void AWeaponBase::Fire()
 			true
 		);
 
+		//Calculate
 		FVector SpawnLocation = Mesh->GetSocketLocation(TEXT("Muzzle"));
 		FVector TargetLocation = bResult ? HitResult.ImpactPoint : End;
 		FVector BulletDirection = (TargetLocation - SpawnLocation).GetSafeNormal();
 
 		FRotator AimRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, TargetLocation + (UKismetMathLibrary::RandomUnitVector() * 0.3f));
 
-		FTransform SpawnTransform(AimRotation, SpawnLocation, FVector::OneVector);
 
-		GetWorld()->SpawnActor<AProjectileBase>(ProjectileTemplate, SpawnTransform);
+		FireProjectile(FTransform(AimRotation, SpawnLocation, FVector::OneVector),
+			HitResult);
 
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash,
+			SpawnLocation,
+			AimRotation
+			
+		);
+
+		//Recoil
 		Character->AddControllerPitchInput(-0.05f);
 	}
 
@@ -133,8 +141,10 @@ void AWeaponBase::Fire()
 
 }
 
-void AWeaponBase::FireProjectile()
+void AWeaponBase::FireProjectile(FTransform SpawnTransform, FHitResult InHitResult)
 {
+	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileTemplate, SpawnTransform);
+	Projectile->HitResult = InHitResult;
 }
 
 

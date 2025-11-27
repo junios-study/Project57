@@ -42,6 +42,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	TSubclassOf<UDamageType> HitDamage;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TObjectPtr<UMaterialInstance> Decal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	FHitResult HitResult;
+
 	UFUNCTION()
 	void ProcessBeginOverlap(AActor* OverlapedActor, AActor* OtherActor);
 };
