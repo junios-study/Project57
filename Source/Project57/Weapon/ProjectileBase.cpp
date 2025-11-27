@@ -18,6 +18,8 @@ AProjectileBase::AProjectileBase()
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	RootComponent = Box;
 	Box->SetBoxExtent(FVector(10, 10, 5));
+	//Simulation Generated Hit Event
+	Box->GetBodyInstance()->bNotifyRigidBodyCollision = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Box);
@@ -90,15 +92,18 @@ void AProjectileBase::ProcessComponentHit(UPrimitiveComponent* HitComponent, AAc
 
 	APawn* Pawn = Cast<APawn>(GetOwner()->GetOwner());
 
-	//ÃÑ½î´Â µ¥¹ÌÁö
-	UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
-		Damage,
-		-HitResult.ImpactNormal,
-		HitResult,
-		Pawn->GetController(),
-		this,
-		UBaseDamageType::StaticClass()
-	);
+	if (Pawn)
+	{
+		//ÃÑ½î´Â µ¥¹ÌÁö
+		UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
+			Damage,
+			-HitResult.ImpactNormal,
+			HitResult,
+			Pawn->GetController(),
+			this,
+			UBaseDamageType::StaticClass()
+		);
+	}
 }
 
 void AProjectileBase::SpawnHitEffect(FHitResult Hit)
