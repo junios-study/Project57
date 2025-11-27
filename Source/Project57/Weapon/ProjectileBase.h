@@ -51,4 +51,10 @@ public:
 
 	UFUNCTION()
 	void ProcessBeginOverlap(AActor* OverlapedActor, AActor* OtherActor);
+
+	UFUNCTION()
+	void ProcessComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit );
+
+	UFUNCTION(BlueprintCallable)
+	virtual void SpawnHitEffect(FHitResult Hit);
 };

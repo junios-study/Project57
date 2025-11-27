@@ -136,6 +136,9 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void SpawnHitEffect(FHitResult Hit);
+
 
 	UFUNCTION(BlueprintCallable)
 	void DoDeadEnd();
@@ -159,5 +162,8 @@ public:
 	void StartIronSight();
 
 	void StopIronSight();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	TObjectPtr<UParticleSystem> BloodEffect;
 
 };

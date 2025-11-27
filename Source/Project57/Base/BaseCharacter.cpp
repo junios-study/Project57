@@ -15,6 +15,7 @@
 #include "../Weapon/BaseDamageType.h"
 #include "Engine/DamageEvents.h"
 #include "PickupItemBase.h"
+#include "Components/DecalComponent.h"
 
 
 
@@ -166,9 +167,9 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		if (Event)
 		{
 			CurrentHP -= DamageAmount;
-
-			 UE_LOG(LogTemp, Warning, TEXT("Point Damage %f %s"), DamageAmount, *(Event->HitInfo.BoneName.ToString()));
 		}
+
+		SpawnHitEffect(Event->HitInfo);
 	}
 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
 	{
@@ -293,3 +294,16 @@ void ABaseCharacter::StopIronSight()
 	bIsIronSight = false;
 }
 
+void ABaseCharacter::SpawnHitEffect(FHitResult Hit)
+{
+	if (BloodEffect)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BloodEffect"));
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			BloodEffect,
+			Hit.ImpactPoint,
+			Hit.ImpactNormal.Rotation()
+		);
+	}
+}
