@@ -7,6 +7,7 @@
 #include "BaseCharacter.generated.h"
 
 class UInputAction;
+class UAIPerceptionStimuliSourceComponent;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -60,6 +61,9 @@ public:
 	{
 		return Camera;
 	}
+
+	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAIPerceptionStimuliSourceComponent> StimuliSource;
 
 
 	UFUNCTION(BlueprintCallable)

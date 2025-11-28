@@ -16,6 +16,7 @@
 #include "Engine/DamageEvents.h"
 #include "PickupItemBase.h"
 #include "Components/DecalComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 
 
@@ -37,6 +38,8 @@ ABaseCharacter::ABaseCharacter()
 
 	Weapon = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon"));
 	Weapon->SetupAttachment(GetMesh());
+
+	StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
 
 }
 

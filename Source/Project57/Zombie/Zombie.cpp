@@ -37,6 +37,11 @@ void AZombie::Tick(float DeltaTime)
 
 }
 
+void AZombie::SetState(EZombieState NewState)
+{
+	CurrentState = NewState;
+}
+
 float AZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
