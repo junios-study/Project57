@@ -6,6 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 AZombie::AZombie()
@@ -115,4 +117,9 @@ void AZombie::SpawnHitEffect(FHitResult Hit)
 			Hit.ImpactNormal.Rotation()
 		);
 	}
+}
+
+void AZombie::ChangeSpeed(float NewMaxSpeed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = NewMaxSpeed;
 }
