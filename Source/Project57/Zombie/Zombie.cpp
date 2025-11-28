@@ -86,7 +86,7 @@ float AZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 	{
 		//죽는다. 애님 몽타주 재생
 		//네트워크 할려면 다 RPC로 작업해 됨
-		DoDead();
+		//DoDead();
 		SetState(EZombieState::Death);
 		AZombie_AIC* AIC = Cast<AZombie_AIC>(GetController());
 		if (AIC)
