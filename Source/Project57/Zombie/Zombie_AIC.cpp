@@ -66,7 +66,7 @@ void AZombie_AIC::ProcessActorPerception(AActor* Actor, FAIStimulus Stimulus)
 	//시야
 	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
-		if (Stimulus.WasSuccessfullySensed())
+		if (Stimulus.WasSuccessfullySensed()) //봤을때
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Type Sight"));
 
@@ -80,16 +80,17 @@ void AZombie_AIC::ProcessActorPerception(AActor* Actor, FAIStimulus Stimulus)
 				Zombie->ChangeSpeed(400.0f);
 			}
 		}
-		else
+		else // 못봤을때
 		{
 			ABaseCharacter* Player = Cast<ABaseCharacter>(Actor);
 			AZombie* Zombie = Cast<AZombie>(GetPawn());
 			if (Player && Zombie)
 			{
 				Blackboard->SetValueAsObject(TEXT("Target"), nullptr);
+				//Blackboard->SetValueAsVector(TEXT("Destination"), Stimulus.StimulusLocation);
 				Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Normal));
 				Zombie->SetState(EZombieState::Normal);
-				Zombie->ChangeSpeed(80.0f);
+				Zombie->ChangeSpeed(400.0f);
 			}
 		}
 	}
@@ -100,6 +101,7 @@ void AZombie_AIC::ProcessPerceptionForget(AActor* Actor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ProcessPerceptionForget %s"), *Actor->GetName());
 
+	//아까 본데 까먹으면 
 	ABaseCharacter* Player = Cast<ABaseCharacter>(Actor);
 	AZombie* Zombie = Cast<AZombie>(GetPawn());
 	if (Player && Zombie)
