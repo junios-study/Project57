@@ -38,8 +38,8 @@ void AZombie_AIC::OnPossess(APawn* InPawn)
 		RunBehaviorTree(RunBTAsset);
 	}
 
-//	Perception->OnPerceptionUpdated.AddDynamic(this, &AZombie_AIC::ProcessPerception);
-//	Perception->OnTargetPerceptionInfoUpdated.AddDynamic(this, &AZombie_AIC::ProcessActorPerceptionInfo);
+	//Perception->OnPerceptionUpdated.AddDynamic(this, &AZombie_AIC::ProcessPerception);
+	//Perception->OnTargetPerceptionInfoUpdated.AddDynamic(this, &AZombie_AIC::ProcessActorPerceptionInfo);
 	Perception->OnTargetPerceptionForgotten.AddDynamic(this, &AZombie_AIC::ProcessPerceptionForget);
 	Perception->OnTargetPerceptionUpdated.AddDynamic(this, &AZombie_AIC::ProcessActorPerception);
 	SetGenericTeamId(3);
@@ -66,16 +66,31 @@ void AZombie_AIC::ProcessActorPerception(AActor* Actor, FAIStimulus Stimulus)
 	//½Ã¾ß
 	if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Type Sight"));
-
-		ABaseCharacter* Player = Cast<ABaseCharacter>(Actor);
-		AZombie* Zombie = Cast<AZombie>(GetPawn());
-		if (Player && Zombie)
+		if (Stimulus.WasSuccessfullySensed())
 		{
-			Blackboard->SetValueAsObject(TEXT("Target"), Player);
-			Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Chase));
-			Zombie->SetState(EZombieState::Chase);
-			Zombie->ChangeSpeed(400.0f);
+			//UE_LOG(LogTemp, Warning, TEXT("Type Sight"));
+
+			ABaseCharacter* Player = Cast<ABaseCharacter>(Actor);
+			AZombie* Zombie = Cast<AZombie>(GetPawn());
+			if (Player && Zombie)
+			{
+				Blackboard->SetValueAsObject(TEXT("Target"), Player);
+				Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Chase));
+				Zombie->SetState(EZombieState::Chase);
+				Zombie->ChangeSpeed(400.0f);
+			}
+		}
+		else
+		{
+			ABaseCharacter* Player = Cast<ABaseCharacter>(Actor);
+			AZombie* Zombie = Cast<AZombie>(GetPawn());
+			if (Player && Zombie)
+			{
+				Blackboard->SetValueAsObject(TEXT("Target"), nullptr);
+				Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Normal));
+				Zombie->SetState(EZombieState::Normal);
+				Zombie->ChangeSpeed(80.0f);
+			}
 		}
 	}
 
