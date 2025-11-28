@@ -38,6 +38,7 @@ void AZombie_AIC::OnPossess(APawn* InPawn)
 	Perception->OnTargetPerceptionForgotten.AddDynamic(this, &AZombie_AIC::ProcessPerceptionForget);
 	Perception->OnTargetPerceptionInfoUpdated.AddDynamic(this, &AZombie_AIC::ProcessActorPerceptionInfo);
 	Perception->OnTargetPerceptionUpdated.AddDynamic(this, &AZombie_AIC::ProcessActorPerception);
+	SetGenericTeamId(3);
 }
 
 void AZombie_AIC::OnUnPossess()

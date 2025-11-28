@@ -41,6 +41,8 @@ ABaseCharacter::ABaseCharacter()
 
 	StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
 
+	TeamID = 1;
+
 }
 
 // Called when the game starts or when spawned
@@ -296,6 +298,22 @@ void ABaseCharacter::StopIronSight()
 {
 	bIsIronSight = false;
 }
+
+//----------------------------------------------------------------------//
+// IGenericTeamAgentInterface
+//----------------------------------------------------------------------//
+void ABaseCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	TeamID = InTeamID;
+}
+
+FGenericTeamId ABaseCharacter::GetGenericTeamId() const
+{
+	return TeamID;
+}
+
+
+
 
 void ABaseCharacter::SpawnHitEffect(FHitResult Hit)
 {
