@@ -86,19 +86,19 @@ void AProjectileBase::ProcessBeginOverlap(AActor* OverlapedActor, AActor* OtherA
 
 void AProjectileBase::ProcessComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s %s"), *OtherActor->GetName(), *OtherComp->GetName());
-
 	SpawnHitEffect(Hit);
 
 	APawn* Pawn = Cast<APawn>(GetOwner()->GetOwner());
 
 	if (Pawn)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s %s"), *OtherActor->GetName(), *OtherComp->GetName());
+
 		//ÃÑ½î´Â µ¥¹ÌÁö
-		UGameplayStatics::ApplyPointDamage(HitResult.GetActor(),
+		UGameplayStatics::ApplyPointDamage(Hit.GetActor(),
 			Damage,
-			-HitResult.ImpactNormal,
-			HitResult,
+			-Hit.ImpactNormal,
+			Hit,
 			Pawn->GetController(),
 			this,
 			UBaseDamageType::StaticClass()

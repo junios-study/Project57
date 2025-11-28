@@ -74,8 +74,13 @@ void AZombie_AIC::ProcessActorPerception(AActor* Actor, FAIStimulus Stimulus)
 			AZombie* Zombie = Cast<AZombie>(GetPawn());
 			if (Player && Zombie)
 			{
+				if (Zombie->GetCurrentState() == EZombieState::Death)
+				{
+					return;
+				}
+
 				Blackboard->SetValueAsObject(TEXT("Target"), Player);
-				Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Chase));
+				SetState(EZombieState::Chase);
 				Zombie->SetState(EZombieState::Chase);
 				Zombie->ChangeSpeed(400.0f);
 			}
@@ -86,11 +91,16 @@ void AZombie_AIC::ProcessActorPerception(AActor* Actor, FAIStimulus Stimulus)
 			AZombie* Zombie = Cast<AZombie>(GetPawn());
 			if (Player && Zombie)
 			{
+				if (Zombie->GetCurrentState() == EZombieState::Death)
+				{
+					return;
+				}
+
 				Blackboard->SetValueAsObject(TEXT("Target"), nullptr);
 				//Blackboard->SetValueAsVector(TEXT("Destination"), Stimulus.StimulusLocation);
-				Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Normal));
+				SetState(EZombieState::Normal);
 				Zombie->SetState(EZombieState::Normal);
-				Zombie->ChangeSpeed(400.0f);
+				Zombie->ChangeSpeed(80.0f);
 			}
 		}
 	}
@@ -106,8 +116,13 @@ void AZombie_AIC::ProcessPerceptionForget(AActor* Actor)
 	AZombie* Zombie = Cast<AZombie>(GetPawn());
 	if (Player && Zombie)
 	{
+		if (Zombie->GetCurrentState() == EZombieState::Death)
+		{
+			return;
+		}
+
 		Blackboard->SetValueAsObject(TEXT("Target"), nullptr);
-		Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(EZombieState::Normal));
+		SetState(EZombieState::Normal);
 		Zombie->SetState(EZombieState::Normal);
 		Zombie->ChangeSpeed(80.0f);
 	}
@@ -117,4 +132,9 @@ void AZombie_AIC::ProcessPerceptionForget(AActor* Actor)
 void AZombie_AIC::ProcessActorPerceptionInfo(const FActorPerceptionUpdateInfo& UpdateInfo)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ProcessPerceptionForget %s"), *(UpdateInfo.Target->GetName()));
+}
+
+void AZombie_AIC::SetState(EZombieState NewState)
+{
+	Blackboard->SetValueAsEnum(TEXT("CurrentState"), (uint8)(NewState));
 }

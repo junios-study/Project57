@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Zombie_AIC.h"
 
 
 // Sets default values
@@ -62,6 +63,8 @@ float AZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 		}
 
 		SpawnHitEffect(Event->HitInfo);
+
+		UE_LOG(LogTemp, Warning, TEXT("Point Damage %f %s"), DamageAmount, *Event->DamageTypeClass->GetName());
 	}
 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
 	{
@@ -69,8 +72,6 @@ float AZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 		if (Event)
 		{
 			CurrentHP -= DamageAmount;
-
-			UE_LOG(LogTemp, Warning, TEXT("Radial Damage %f %s"), DamageAmount, *Event->DamageTypeClass->GetName());
 		}
 	}
 	else //(DamageEvent.IsOfType(FDamageEvent::ClassID))
@@ -86,6 +87,12 @@ float AZombie::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 		//죽는다. 애님 몽타주 재생
 		//네트워크 할려면 다 RPC로 작업해 됨
 		DoDead();
+		SetState(EZombieState::Death);
+		AZombie_AIC* AIC = Cast<AZombie_AIC>(GetController());
+		if (AIC)
+		{
+			AIC->SetState(EZombieState::Death);
+		}
 	}
 
 	return DamageAmount;
