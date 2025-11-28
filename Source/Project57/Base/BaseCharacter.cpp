@@ -41,7 +41,7 @@ ABaseCharacter::ABaseCharacter()
 
 	StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
 
-	TeamID = 1;
+	SetGenericTeamId(1);
 
 }
 
