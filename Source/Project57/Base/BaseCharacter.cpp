@@ -58,6 +58,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//DrawFrustum();
 }
 
 // Called to bind functionality to input
@@ -312,9 +313,6 @@ FGenericTeamId ABaseCharacter::GetGenericTeamId() const
 	return TeamID;
 }
 
-
-
-
 void ABaseCharacter::SpawnHitEffect(FHitResult Hit)
 {
 	if (BloodEffect)
@@ -327,4 +325,81 @@ void ABaseCharacter::SpawnHitEffect(FHitResult Hit)
 			Hit.ImpactNormal.Rotation()
 		);
 	}
+}
+
+
+
+void ABaseCharacter::DrawFrustum()
+{
+	FMinimalViewInfo CameraView;
+	// 카메라의 현재 뷰 정보(위치, 회전, FOV, AspectRatio 등)를 가져옵니다.
+	Camera->GetCameraView(0.0f, CameraView);
+
+	// 1. 필요한 투영 매개변수 정의
+
+	// FOV를 라디안으로 변환 (절반 각도)
+	const float HalfFOVRadians = FMath::DegreesToRadians(CameraView.FOV / 2.0f);
+	const float AspectRatio = CameraView.AspectRatio;
+
+	// Near/Far Clip Distance 정의 (원근 절두체에 필수)
+	// 실제 카메라 컴포넌트 설정을 반영하여 값을 정해야 합니다.
+	const float NearClipDistance = 10.0f;  // 카메라 앞 10cm (Near Plane)
+	const float FarClipDistance = 1000.0f; // 10미터 (Far Plane)
+
+	// 2. Near/Far Plane의 Half Height/Width 계산 (삼각법 사용)
+
+	// H = D * tan(HalfFOV)
+	const float HalfHeightNear = NearClipDistance * FMath::Tan(HalfFOVRadians);
+	// W = H * AspectRatio
+	const float HalfWidthNear = HalfHeightNear * AspectRatio;
+
+	const float HalfHeightFar = FarClipDistance * FMath::Tan(HalfFOVRadians);
+	const float HalfWidthFar = HalfHeightFar * AspectRatio;
+
+	// 3. Frustum의 8개 꼭짓점을 로컬 공간에서 계산
+	// 카메라 로컬 좌표계: +X = Forward, +Y = Right, +Z = Up
+	FVector Corners[8]; // 0~3: Near Plane, 4~7: Far Plane
+
+	// Near Plane (Z=Up/Down, Y=Right/Left)
+	Corners[0] = FVector(NearClipDistance, -HalfWidthNear, HalfHeightNear);  // Near Top-Left
+	Corners[1] = FVector(NearClipDistance, HalfWidthNear, HalfHeightNear);   // Near Top-Right
+	Corners[2] = FVector(NearClipDistance, HalfWidthNear, -HalfHeightNear);  // Near Bottom-Right
+	Corners[3] = FVector(NearClipDistance, -HalfWidthNear, -HalfHeightNear); // Near Bottom-Left
+
+	// Far Plane
+	Corners[4] = FVector(FarClipDistance, -HalfWidthFar, HalfHeightFar);   // Far Top-Left
+	Corners[5] = FVector(FarClipDistance, HalfWidthFar, HalfHeightFar);    // Far Top-Right
+	Corners[6] = FVector(FarClipDistance, HalfWidthFar, -HalfHeightFar);   // Far Bottom-Right
+	Corners[7] = FVector(FarClipDistance, -HalfWidthFar, -HalfHeightFar);  // Far Bottom-Left
+
+	// 4. 로컬 좌표를 월드 좌표로 변환
+	FTransform CameraTransform(CameraView.Rotation, CameraView.Location, FVector(1.0f));
+	FVector WorldCorners[8];
+	for (int32 i = 0; i < 8; ++i)
+	{
+		WorldCorners[i] = CameraTransform.TransformPosition(Corners[i]);
+	}
+
+	// 5. DebugDrawLine을 사용하여 절두체의 12개 모서리 그리기
+	const float LineDuration = 0.0f; // 한 프레임만 표시
+	const float LineThickness = 3.0f;
+	const FLinearColor LineColor = FLinearColor::Green;
+
+	// Near Plane (앞면) 그리기 (4개 선)
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[0], WorldCorners[1], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[1], WorldCorners[2], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[2], WorldCorners[3], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[3], WorldCorners[0], LineColor, LineDuration, LineThickness);
+
+	// Far Plane (뒷면) 그리기 (4개 선)
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[4], WorldCorners[5], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[5], WorldCorners[6], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[6], WorldCorners[7], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[7], WorldCorners[4], LineColor, LineDuration, LineThickness);
+
+	// 두 평면 연결 (4개 선)
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[0], WorldCorners[4], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[1], WorldCorners[5], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[2], WorldCorners[6], LineColor, LineDuration, LineThickness);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[3], WorldCorners[7], LineColor, LineDuration, LineThickness);
 }

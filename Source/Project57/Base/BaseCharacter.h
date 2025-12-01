@@ -184,4 +184,10 @@ public:
 	/** Retrieve team identifier in form of FGenericTeamId */
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
+
+
+	
+	void DrawFrustum();
+
+
 };
