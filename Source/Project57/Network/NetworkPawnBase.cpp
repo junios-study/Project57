@@ -138,3 +138,12 @@ void ANetworkPawnBase::OnRep_Owner()
 	NET_LOG(TEXT("End"));
 }
 
+void ANetworkPawnBase::PostInitializeComponents()
+{
+	NET_LOG(TEXT("Begin"));
+
+	Super::PostInitializeComponents();
+
+	NET_LOG(TEXT("End"));
+}
+

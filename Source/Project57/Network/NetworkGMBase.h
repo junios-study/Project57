@@ -25,5 +25,8 @@ public:
 
 	virtual void StartPlay() override;
 
+	virtual void PostInitializeComponents() override;
+
+
 
 };

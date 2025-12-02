@@ -32,5 +32,8 @@ public:
 
 	virtual void OnRep_Owner() override;
 
+	virtual void PostInitializeComponents() override;
+
+
 
 };

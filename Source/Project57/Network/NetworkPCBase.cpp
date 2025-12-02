@@ -48,3 +48,12 @@ void ANetworkPCBase::PostNetInit()
 
 	NET_LOG(TEXT("End"));
 }
+
+void ANetworkPCBase::PostInitializeComponents()
+{
+	NET_LOG(TEXT("Begin"));
+
+	Super::PostInitializeComponents();
+
+	NET_LOG(TEXT("End"));
+}

@@ -52,3 +52,12 @@ void ANetworkGMBase::StartPlay()
 
 	NET_LOG(TEXT("End"));
 }
+
+void ANetworkGMBase::PostInitializeComponents()
+{
+	NET_LOG(TEXT("Begin"));
+
+	Super::PostInitializeComponents();
+
+	NET_LOG(TEXT("End"));
+}

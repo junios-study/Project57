@@ -19,5 +19,8 @@ public:
 
 	virtual void PostNetInit() override;
 
+	virtual void PostInitializeComponents() override;
+
+
 	
 };
