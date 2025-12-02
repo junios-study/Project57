@@ -10,6 +10,41 @@ void ANetworkPCBase::BeginPlay()
 
 	Super::BeginPlay();
 
+	if (GetLocalRole() == ENetRole::ROLE_Authority)
+	{
+		NET_LOG(TEXT("LocalRole::ROLE_Authority"));
+	}
+	else if (GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
+	{
+		NET_LOG(TEXT("LocalRole::ROLE_AutonomousProxy"));
+	}
+	else if (GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+	{
+		NET_LOG(TEXT("LocalRole::ROLE_SimulatedProxy"));
+	}
+
+	if (GetRemoteRole() == ENetRole::ROLE_Authority)
+	{
+		NET_LOG(TEXT("RmoteRole::ROLE_Authority"));
+	}
+	else if (GetRemoteRole() == ENetRole::ROLE_AutonomousProxy)
+	{
+		NET_LOG(TEXT("RmoteRole::ROLE_AutonomousProxy"));
+	}
+	else if (GetRemoteRole() == ENetRole::ROLE_SimulatedProxy)
+	{
+		NET_LOG(TEXT("RmoteRole::ROLE_SimulatedProxy"));
+	}
+
 	NET_LOG(TEXT("End"));
 
+}
+
+void ANetworkPCBase::PostNetInit()
+{
+	NET_LOG(TEXT("Begin"));
+
+	Super::PostNetInit();
+
+	NET_LOG(TEXT("End"));
 }

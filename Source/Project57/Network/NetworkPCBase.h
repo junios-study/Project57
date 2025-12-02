@@ -16,5 +16,8 @@ class PROJECT57_API ANetworkPCBase : public APlayerController
 
 public:
 	virtual void BeginPlay() override;
+
+	virtual void PostNetInit() override;
+
 	
 };
