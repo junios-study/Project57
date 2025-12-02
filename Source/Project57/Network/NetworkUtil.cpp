@@ -2,6 +2,7 @@
 
 
 #include "NetworkUtil.h"
+#include "../Project57.h"
 
 NetworkUtil::NetworkUtil()
 {
@@ -11,7 +12,7 @@ NetworkUtil::~NetworkUtil()
 {
 }
 
-void NetworkUtil::Log(UWorld* World, const FString& InString)
+void NetworkUtil::Log(UWorld* World, const FString& CallInfo, const FString& InString)
 {
 	if (!World)
 	{
@@ -36,4 +37,7 @@ void NetworkUtil::Log(UWorld* World, const FString& InString)
 		break;
 	}
 
+	
+
+	UE_LOG(LogNetworkUtil, Warning, TEXT("%s %s - %s"), *Prefix, *CallInfo, *InString);
 }

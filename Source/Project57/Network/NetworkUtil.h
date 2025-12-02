@@ -14,5 +14,8 @@ public:
 	~NetworkUtil();
 
 
-	static void Log(UWorld* World, const FString& InString);
+	static void Log(UWorld* World, const FString& CallInfo, const FString& InString);
 };
+
+
+#define NET_LOG(String)		NetworkUtil::Log(GetWorld(), ANSI_TO_TCHAR(__FUNCTION__), String)
