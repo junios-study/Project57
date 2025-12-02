@@ -23,4 +23,7 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void StartPlay() override;
+
+
 };

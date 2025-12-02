@@ -2,4 +2,14 @@
 
 
 #include "NetworkPCBase.h"
+#include "NetworkUtil.h"
 
+void ANetworkPCBase::BeginPlay()
+{
+	NET_LOG(TEXT("Begin"));
+
+	Super::BeginPlay();
+
+	NET_LOG(TEXT("End"));
+
+}
