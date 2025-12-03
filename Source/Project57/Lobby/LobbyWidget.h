@@ -50,4 +50,7 @@ public:
 	UFUNCTION()
 	void ProcessOnChange(const FText& Text);
 
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateLeftTime(int32 InLeftTime);
 };

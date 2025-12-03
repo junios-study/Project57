@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "LobbyPC.generated.h"
 
+class ULobbyWidget;
 /**
  * 
  */
@@ -14,4 +15,17 @@ class PROJECT57_API ALobbyPC : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	ALobbyPC();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TSubclassOf<ULobbyWidget> LobbyWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	TObjectPtr<ULobbyWidget> LobbyWidgetObject;
 };

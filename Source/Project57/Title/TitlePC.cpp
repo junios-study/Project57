@@ -24,6 +24,9 @@ void ATitlePC::BeginPlay()
 		}
 	}
 
+	bShowMouseCursor = true;
+	SetInputMode(FInputModeUIOnly());
+
 }
 
 void ATitlePC::PostInitializeComponents()
