@@ -28,11 +28,4 @@ void ALobbyPC::BeginPlay()
 void ALobbyPC::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	ALobbyGS* GS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
-
-	if (GS && LobbyWidgetObject)
-	{
-		LobbyWidgetObject->UpdateLeftTime(GS->LeftTime);
-	}
 }

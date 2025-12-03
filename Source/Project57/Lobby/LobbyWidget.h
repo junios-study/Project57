@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Blueprint/UserWidget.h"
 #include "LobbyWidget.generated.h"
 
@@ -53,4 +54,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateLeftTime(int32 InLeftTime);
+
 };

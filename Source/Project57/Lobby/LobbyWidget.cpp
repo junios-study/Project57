@@ -7,6 +7,7 @@
 #include "Components/ScrollBox.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "LobbyGS.h"
 
 void ULobbyWidget::NativeOnInitialized()
 {
@@ -22,6 +23,14 @@ void ULobbyWidget::NativeOnInitialized()
 		ChatInput->OnTextCommitted.AddDynamic(this, &ULobbyWidget::ProcessOnCommit);
 		ChatInput->OnTextChanged.AddDynamic(this, &ULobbyWidget::ProcessOnChange);
 	}
+
+	ALobbyGS* GS = Cast<ALobbyGS>(UGameplayStatics::GetGameState(GetWorld()));
+	if (GS)
+	{
+		GS->OnChageLeftTime.AddDynamic(this, &ULobbyWidget::UpdateLeftTime);
+	}
+
+
 }
 
 void ULobbyWidget::Start()

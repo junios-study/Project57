@@ -3,6 +3,9 @@
 
 #include "LobbyGS.h"
 #include "Net/UnrealNetwork.h"
+#include "LobbyPC.h"
+#include "Kismet/GameplayStatics.h"
+#include "LobbyWidget.h"
 
 void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -10,4 +13,16 @@ void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 
 	DOREPLIFETIME(ALobbyGS, LeftTime);
 	DOREPLIFETIME(ALobbyGS, ConnectionCount);
+}
+
+void ALobbyGS::OnRep_LeftTime()
+{
+	//ALobbyPC* PC = Cast<ALobbyPC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	//if (PC && PC->LobbyWidgetObject)
+	//{
+	//	PC->LobbyWidgetObject->UpdateLeftTime(LeftTime);
+	//}
+	OnChageLeftTime.Broadcast(LeftTime);
+	
 }

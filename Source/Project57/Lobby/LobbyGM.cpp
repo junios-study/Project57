@@ -39,7 +39,9 @@ void ALobbyGM::BeginPlay()
 			ALobbyGS* GS = GetGameState<ALobbyGS>();
 			if (GS)
 			{
+				//Server
 				GS->LeftTime--;
+				GS->OnRep_LeftTime();
 			}
 		}),
 		1.0f,
