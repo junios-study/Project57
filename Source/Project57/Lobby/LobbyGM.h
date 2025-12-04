@@ -25,5 +25,8 @@ public:
 	virtual void BeginPlay() override;
 
 	FTimerHandle LeftTimerHandle;
+
+	void CheckConnectionCount();
+
 	
 };

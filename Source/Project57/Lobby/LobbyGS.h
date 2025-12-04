@@ -10,6 +10,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangedLeftTime, const int32, InLeftTime);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangedConnectionCount, const int32, InConnectionCount);
+
 /**
  * 
  */
@@ -27,11 +29,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data, ReplicatedUsing="OnRep_LeftTime")
 	int32 LeftTime = 60;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data, Replicated)
+
+	UFUNCTION()
+	void OnRep_ConnectionCount();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data, ReplicatedUsing="OnRep_ConnectionCount")
 	int32 ConnectionCount = 0;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnChangedLeftTime OnChageLeftTime;
+
+
+	UPROPERTY(BlueprintAssignable)
+	FOnChangedConnectionCount OnChangetConnectionCount;
+
+
+	virtual void BeginPlay() override;
 
 
 };

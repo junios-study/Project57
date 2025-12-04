@@ -24,6 +24,8 @@ public:
 	virtual void NativeOnInitialized() override;
 
 
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
 	TObjectPtr<UButton> StartButton;
 
@@ -55,4 +57,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateLeftTime(int32 InLeftTime);
 
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateConnectionCount(int32 InConnectionCount);
 };

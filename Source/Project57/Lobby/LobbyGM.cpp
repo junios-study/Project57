@@ -4,6 +4,9 @@
 #include "LobbyGM.h"
 #include "LobbyGS.h"
 
+#include "../Project57.h"
+#include "../Network/NetworkUtil.h"
+
 ALobbyGM::ALobbyGM()
 {
 }
@@ -28,10 +31,14 @@ void ALobbyGM::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+
+	CheckConnectionCount();
+
 }
 
 void ALobbyGM::BeginPlay()
 {
+	NET_LOG("Begin");
 	Super::BeginPlay();
 
 	GetWorld()->GetTimerManager().SetTimer(LeftTimerHandle,
@@ -48,4 +55,27 @@ void ALobbyGM::BeginPlay()
 		true,
 		0.0f
 	);
+
+	//BeginPlay()보다 UI가 늦어서 업데이트 한번 함.
+	CheckConnectionCount();
+
+	NET_LOG("End");
+}
+
+void ALobbyGM::CheckConnectionCount()
+{
+	ALobbyGS* GS = GetGameState<ALobbyGS>();
+	if (GS)
+	{
+		//Client다 되는데 서버에서는 업데이트가 안됨
+		int32 TempCount = 0;
+		for (auto Iter = GetWorld()->GetPlayerControllerIterator();
+			Iter; ++Iter)
+		{
+			TempCount++;
+		}
+
+		GS->ConnectionCount = TempCount;
+		GS->OnRep_ConnectionCount();
+	}
 }

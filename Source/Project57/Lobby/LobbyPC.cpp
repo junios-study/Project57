@@ -5,6 +5,7 @@
 #include "LobbyWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "LobbyGS.h"
+#include "LobbyGM.h"
 
 ALobbyPC::ALobbyPC()
 {
@@ -21,6 +22,13 @@ void ALobbyPC::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("ALobbyPC::BeginPlay"));
 			LobbyWidgetObject = CreateWidget<ULobbyWidget>(this, LobbyWidgetClass);
 			LobbyWidgetObject->AddToViewport();
+
+			//Listen Server일때만 실행
+			ALobbyGM* GM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
+			if (GM)
+			{
+				GM->CheckConnectionCount();
+			}
 		}
 	}
 }

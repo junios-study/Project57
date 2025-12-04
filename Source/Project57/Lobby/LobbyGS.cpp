@@ -6,6 +6,8 @@
 #include "LobbyPC.h"
 #include "Kismet/GameplayStatics.h"
 #include "LobbyWidget.h"
+#include "../Project57.h"
+#include "../Network/NetworkUtil.h"
 
 void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -26,3 +28,16 @@ void ALobbyGS::OnRep_LeftTime()
 	OnChageLeftTime.Broadcast(LeftTime);
 	
 }
+
+void ALobbyGS::OnRep_ConnectionCount()
+{
+	OnChangetConnectionCount.Broadcast(ConnectionCount);
+}
+
+void ALobbyGS::BeginPlay()
+{
+	NET_LOG("Begin"); // PC->BeginPlay()
+	Super::BeginPlay();
+	NET_LOG("End");
+}
+
