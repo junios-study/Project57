@@ -60,4 +60,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateConnectionCount(int32 InConnectionCount);
+
+
+	void AddMessage(const FText& Message);
 };

@@ -39,7 +39,7 @@ void ALobbyPC::Tick(float DeltaSeconds)
 
 bool ALobbyPC::C2S_SendMessage_Validate(const FText& Message)
 {
-	return false;
+	return true;
 }
 
 void ALobbyPC::C2S_SendMessage_Implementation(const FText& Message)
@@ -56,5 +56,8 @@ void ALobbyPC::C2S_SendMessage_Implementation(const FText& Message)
 
 void ALobbyPC::S2C_SendMessage_Implementation(const FText& Message)
 {
-	//¹ä ¸Ô°í ÇÏÀÚ.
+	if (LobbyWidgetObject)
+	{
+		LobbyWidgetObject->AddMessage(Message);
+	}
 }

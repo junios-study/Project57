@@ -6,6 +6,7 @@
 #include "Components/EditableTextBox.h"
 #include "Components/ScrollBox.h"
 #include "Components/Button.h"
+#include "Components/RichTextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "LobbyGS.h"
 #include "LobbyPC.h"
@@ -53,6 +54,26 @@ void ULobbyWidget::UpdateConnectionCount(int32 InConnectionCount)
 	}
 }
 
+void ULobbyWidget::AddMessage(const FText& Message)
+{
+	if (ChatScrollBox)
+	{
+		URichTextBlock* NewMessageBlock = NewObject<URichTextBlock>(ChatScrollBox);
+		if (NewMessageBlock)
+		{
+			NewMessageBlock->SetText(Message);
+			//FSlateFontInfo FontInfo =  NewMessageBlock->GetFont();
+			//FontInfo.Size = 20;
+			//NewMessageBlock->SetFont(FontInfo);
+			//NewMessageBlock->SetColorAndOpacity(FSlateColor(FLinearColor(0, 0, 1)));
+			
+			ChatScrollBox->AddChild(NewMessageBlock);
+			ChatScrollBox->ScrollToEnd();
+		}
+	}
+
+}
+
 void ULobbyWidget::Start()
 {
 	GetWorld()->ServerTravel(TEXT("InGame"));
@@ -77,6 +98,7 @@ void ULobbyWidget::ProcessOnCommit(const FText& Text, ETextCommit::Type CommitMe
 
 					//Local PC call -> Server PC execute
 					PC->C2S_SendMessage(FText::FromString(Temp));
+					ChatInput->SetText(FText::FromString(TEXT("")));
 				}
 			}	
 
@@ -85,7 +107,7 @@ void ULobbyWidget::ProcessOnCommit(const FText& Text, ETextCommit::Type CommitMe
 
 		case ETextCommit::OnCleared:
 		{
-
+			ChatInput->SetUserFocus(GetOwningPlayer());
 		}
 		break;
 	}
