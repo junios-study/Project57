@@ -8,6 +8,8 @@
 #include "LobbyWidget.h"
 #include "../Project57.h"
 #include "../Network/NetworkUtil.h"
+#include "LobbyGM.h"
+
 
 void ALobbyGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -39,5 +41,23 @@ void ALobbyGS::BeginPlay()
 	NET_LOG("Begin"); // PC->BeginPlay()
 	Super::BeginPlay();
 	NET_LOG("End");
+}
+
+void ALobbyGS::CountDownLeftTime()
+{
+	//Server
+	if (LeftTime > 0)
+	{
+		LeftTime--;
+		OnRep_LeftTime();
+	}
+	else
+	{
+		ALobbyGM* GM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM)
+		{
+			GM->StartGame();
+		}
+	}
 }
 

@@ -28,5 +28,9 @@ public:
 
 	void CheckConnectionCount();
 
+	void StopTimer();
+
+	void StartGame();
+
 	
 };

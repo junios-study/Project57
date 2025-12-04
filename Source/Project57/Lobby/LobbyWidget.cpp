@@ -11,6 +11,7 @@
 #include "LobbyGS.h"
 #include "LobbyPC.h"
 #include "../Title/DataGameInstanceSubsystem.h"
+#include "LobbyGM.h"
 
 #include "../Project57.h"
 #include "../Network/NetworkUtil.h"
@@ -93,7 +94,11 @@ void ULobbyWidget::ShowStartButton()
 
 void ULobbyWidget::Start()
 {
-	GetWorld()->ServerTravel(TEXT("InGame"));
+	ALobbyGM* GM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM)
+	{
+		GM->StartGame();
+	}
 }
 
 void ULobbyWidget::ProcessOnCommit(const FText& Text, ETextCommit::Type CommitMethod)

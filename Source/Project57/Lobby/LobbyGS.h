@@ -46,5 +46,6 @@ public:
 
 	virtual void BeginPlay() override;
 
+	void CountDownLeftTime();
 
 };
