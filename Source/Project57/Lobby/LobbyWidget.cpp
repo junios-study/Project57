@@ -83,6 +83,14 @@ void ULobbyWidget::AddMessage(const FText& Message)
 
 }
 
+void ULobbyWidget::ShowStartButton()
+{
+	if (StartButton)
+	{
+		StartButton->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
 void ULobbyWidget::Start()
 {
 	GetWorld()->ServerTravel(TEXT("InGame"));
