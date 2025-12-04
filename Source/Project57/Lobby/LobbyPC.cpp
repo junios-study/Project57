@@ -19,7 +19,6 @@ void ALobbyPC::BeginPlay()
 	{
 		if (IsLocalPlayerController())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("ALobbyPC::BeginPlay"));
 			LobbyWidgetObject = CreateWidget<ULobbyWidget>(this, LobbyWidgetClass);
 			LobbyWidgetObject->AddToViewport();
 
