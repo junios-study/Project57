@@ -61,7 +61,10 @@ void ULobbyWidget::AddMessage(const FText& Message)
 		URichTextBlock* NewMessageBlock = NewObject<URichTextBlock>(ChatScrollBox);
 		if (NewMessageBlock)
 		{
+			
 			NewMessageBlock->SetText(Message);
+			NewMessageBlock->SetAutoWrapText(true);
+			NewMessageBlock->SetWrapTextAt(ChatScrollBox->GetCachedGeometry().GetLocalSize().X);
 			NewMessageBlock->SetWrappingPolicy(ETextWrappingPolicy::AllowPerCharacterWrapping);
 
 			//FSlateFontInfo FontInfo =  NewMessageBlock->GetFont();
@@ -98,7 +101,6 @@ void ULobbyWidget::ProcessOnCommit(const FText& Text, ETextCommit::Type CommitMe
 				if (GI)
 				{
 					UDataGameInstanceSubsystem* MySubsystem = GI->GetSubsystem<UDataGameInstanceSubsystem>();
-					//MySubsystem->UserID = 
 					FString Temp = FString::Printf(TEXT("%s : %s"),
 						*MySubsystem->UserID, *Text.ToString());
 
