@@ -3,6 +3,7 @@
 
 #include "LobbyGM.h"
 #include "LobbyGS.h"
+#include "LobbyPC.h"
 
 #include "../Project57.h"
 #include "../Network/NetworkUtil.h"
@@ -86,5 +87,14 @@ void ALobbyGM::StopTimer()
 void ALobbyGM::StartGame()
 {
 	StopTimer();
+	for (auto Iter = GetWorld()->GetPlayerControllerIterator();
+		Iter; ++Iter)
+	{
+		ALobbyPC* PC = Cast<ALobbyPC>(*Iter);
+		if (PC)
+		{
+			PC->S2C_ShowLoadingScreen();
+		}
+	}
 	GetWorld()->ServerTravel(TEXT("InGame"));
 }
