@@ -63,4 +63,7 @@ public:
 
 
 	void AddMessage(const FText& Message);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UDataTable> ChatStyleSet;
 };

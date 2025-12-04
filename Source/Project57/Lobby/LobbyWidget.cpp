@@ -62,10 +62,16 @@ void ULobbyWidget::AddMessage(const FText& Message)
 		if (NewMessageBlock)
 		{
 			NewMessageBlock->SetText(Message);
+			NewMessageBlock->SetWrappingPolicy(ETextWrappingPolicy::AllowPerCharacterWrapping);
+
 			//FSlateFontInfo FontInfo =  NewMessageBlock->GetFont();
 			//FontInfo.Size = 20;
 			//NewMessageBlock->SetFont(FontInfo);
 			//NewMessageBlock->SetColorAndOpacity(FSlateColor(FLinearColor(0, 0, 1)));
+			if (ChatStyleSet)
+			{
+				NewMessageBlock->SetTextStyleSet(ChatStyleSet);
+			}
 			
 			ChatScrollBox->AddChild(NewMessageBlock);
 			ChatScrollBox->ScrollToEnd();
