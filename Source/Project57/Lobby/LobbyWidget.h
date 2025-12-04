@@ -26,19 +26,19 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (BindWidget))
 	TObjectPtr<UButton> StartButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (BindWidget))
 	TObjectPtr<UEditableTextBox> ChatInput;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (BindWidget))
 	TObjectPtr <UTextBlock> ConnectionCount;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (BindWidget))
 	TObjectPtr<UTextBlock> LeftTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (WidgetBind))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (BindWidget))
 	TObjectPtr<UScrollBox> ChatScrollBox;
 
 
