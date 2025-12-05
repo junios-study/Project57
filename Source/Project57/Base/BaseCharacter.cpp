@@ -17,6 +17,8 @@
 #include "PickupItemBase.h"
 #include "Components/DecalComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 
@@ -81,6 +83,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 			&ABaseCharacter::StartIronSight);
 		UIC->BindAction(IA_IronSight, ETriggerEvent::Completed, this,
 			&ABaseCharacter::StopIronSight);
+
+		UIC->BindAction(IA_Sprint, ETriggerEvent::Started, this,
+			&ABaseCharacter::StartSprint);
+		UIC->BindAction(IA_Sprint, ETriggerEvent::Completed, this,
+			&ABaseCharacter::StopSprint);
 	}
 
 }
@@ -298,6 +305,36 @@ void ABaseCharacter::StartIronSight()
 void ABaseCharacter::StopIronSight()
 {
 	bIsIronSight = false;
+}
+
+void ABaseCharacter::StartSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	C2S_StartSprint();
+}
+
+void ABaseCharacter::StopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+	C2S_StopSprint();
+}
+
+void ABaseCharacter::C2S_StartSprint_Implementation()
+{
+	//Server
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
+void ABaseCharacter::C2S_StopSprint_Implementation()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+}
+
+void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME(ABaseCharacter, bSprint);
 }
 
 //----------------------------------------------------------------------//

@@ -85,7 +85,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopFire();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Character, Replicated)
 	uint8 bSprint : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
@@ -115,6 +115,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	TObjectPtr<UInputAction> IA_IronSight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	TObjectPtr<UInputAction> IA_Sprint;
 
 	
 
@@ -167,9 +170,26 @@ public:
 	void StartIronSight();
 
 	void StopIronSight();
+	
+	void StartSprint();
+
+	void StopSprint();
+
+	UFUNCTION(Server, Reliable)
+	void C2S_StartSprint();
+	void C2S_StartSprint_Implementation();
+
+	UFUNCTION(Server, Reliable)
+	void C2S_StopSprint();
+	void C2S_StopSprint_Implementation();
+	
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	TObjectPtr<UParticleSystem> BloodEffect;
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 
 //----------------------------------------------------------------------//
