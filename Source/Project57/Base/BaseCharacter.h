@@ -230,4 +230,6 @@ public:
 
 	FRotator GetAimOffset() const;
 
+
+	FRotator AimRotation;
 };

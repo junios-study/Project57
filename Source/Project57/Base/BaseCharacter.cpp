@@ -61,6 +61,32 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+//	FRotator HandRotation = GetMesh()->GetSocketRotation(TEXT("hand_r"));
+//
+//	FVector HandLocation = GetMesh()->GetSocketLocation(TEXT("hand_r"));
+//
+//	// 2. 컴포넌트 공간(Component Space)에서의 트랜스폼 가져오기
+//// 트랜스폼(FTransform)을 가져와서 회전(FRotator 또는 FQuat)을 추출할 수 있습니다.
+//	FTransform ComponentSpaceTransform = GetMesh()->GetSocketTransform(TEXT("hand_r"), RTS_Component);
+//	FRotator ComponentSpaceRotation = ComponentSpaceTransform.Rotator();
+//
+//	FVector HandStart = HandLocation + ComponentSpaceRotation.Vector()*1000.0f;
+//
+//	UKismetSystemLibrary::DrawDebugLine(GetWorld(), HandLocation, HandStart, FLinearColor::Green, 0.0f, 1.0f);
+//
+//
+//
+//	const FVector Start = GetCameraComponent()->GetComponentLocation();
+//	const FVector End = Start + (GetCameraComponent()->GetForwardVector());
+//
+//	const FVector AimVector = (End - Start).GetSafeNormal();
+//
+//	AimRotation = UKismetMathLibrary::FindLookAtRotation(HandStart, End);
+//
+//	UE_LOG(LogTemp, Warning, TEXT("AimRotation %s"), *AimRotation.ToString());
+//
+	AimRotation = FRotator::ZeroRotator;
+
 	//DrawFrustum();
 }
 
