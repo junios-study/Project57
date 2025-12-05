@@ -19,6 +19,7 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "../Network/NetworkUtil.h"
 
 
 
@@ -235,10 +236,19 @@ void ABaseCharacter::DoHitReact()
 
 void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC || !PC->HasAuthority())
+	{
+		return;
+	}
+
+	NET_LOG(TEXT("ProcessBeginOverlap"));
+
 	APickupItemBase* PickedUpItem = Cast<APickupItemBase>(OtherActor);
 
 	if (PickedUpItem)
 	{
+
 		switch (PickedUpItem->ItemType)
 		{
 		case EItemType::Use: //Game Ability System
@@ -252,10 +262,14 @@ void ABaseCharacter::ProcessBeginOverlap(AActor* OverlappedActor, AActor* OtherA
 			break;
 		}
 
+		PickedUpItem->SetOwner(this);
+
 		if (!PickedUpItem->bIsInfinity)
 		{
 			PickedUpItem->Destroy();
 		}
+
+
 	
 	}
 }
@@ -294,6 +308,8 @@ void ABaseCharacter::EquipItem(APickupItemBase* PickedUpItem)
 			//WeaponState = EWeaponState::GrenadeLauncer;
 			ChildWeapon->SetOwner(this);
 		}
+
+		NET_LOG(FString::Printf(TEXT("equip %s"), *ChildWeapon->GetOuter()->GetName()));
 	}
 }
 
@@ -360,6 +376,7 @@ void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ABaseCharacter, bRightLean);
 	DOREPLIFETIME(ABaseCharacter, bAiming);
 	DOREPLIFETIME(ABaseCharacter, bIsIronSight);
+	DOREPLIFETIME(ABaseCharacter, WeaponState);
 }
 
 //----------------------------------------------------------------------//

@@ -88,6 +88,12 @@ void AProjectileBase::ProcessComponentHit(UPrimitiveComponent* HitComponent, AAc
 {
 	SpawnHitEffect(Hit);
 
+	if (GetOwner())
+	{
+		//서버가 아니면 총알의 주인이 없다.
+		return;
+	}
+
 	APawn* Pawn = Cast<APawn>(GetOwner()->GetOwner());
 
 	if (Pawn)

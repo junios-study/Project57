@@ -98,7 +98,7 @@ public:
 	uint8 bAiming : 1;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	EWeaponState WeaponState = EWeaponState::Unarmed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)

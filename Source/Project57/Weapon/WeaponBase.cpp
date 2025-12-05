@@ -12,6 +12,8 @@
 #include "TimerManager.h"
 #include "ProjectileBase.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "../Project57.h"
+#include "../Network/NetworkUtil.h"
 
 
 
@@ -24,13 +26,22 @@ AWeaponBase::AWeaponBase()
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
 
+	SetReplicates(true);
 }
 
 // Called when the game starts or when spawned
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (GetOwner())
+	{
+		NET_LOG(FString::Printf(TEXT("Weapon Owner %s"), *GetOwner()->GetName()));
+	}
+	else
+	{
+		NET_LOG(FString::Printf(TEXT("No Owner")));
+	}
 }
 
 // Called every frame
