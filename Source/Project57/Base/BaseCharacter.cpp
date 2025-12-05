@@ -300,11 +300,29 @@ void ABaseCharacter::EquipItem(APickupItemBase* PickedUpItem)
 void ABaseCharacter::StartIronSight()
 {
 	bIsIronSight = true;
+	bAiming = true;
+	C2S_StartIronSight();
 }
 
 void ABaseCharacter::StopIronSight()
 {
 	bIsIronSight = false;
+	bAiming = false;
+	C2S_StopIronSight();
+}
+
+void ABaseCharacter::C2S_StartIronSight_Implementation()
+{
+	bIsIronSight = true;
+	bAiming = true;
+}
+
+
+
+void ABaseCharacter::C2S_StopIronSight_Implementation()
+{
+	bIsIronSight = false;
+	bAiming = false;
 }
 
 void ABaseCharacter::StartSprint()
@@ -335,6 +353,13 @@ void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
 	DOREPLIFETIME(ABaseCharacter, bSprint);
+	DOREPLIFETIME(ABaseCharacter, CurrentHP);
+	DOREPLIFETIME(ABaseCharacter, MaxHP);
+	DOREPLIFETIME(ABaseCharacter, bIsFire);
+	DOREPLIFETIME(ABaseCharacter, bLeftLean);
+	DOREPLIFETIME(ABaseCharacter, bRightLean);
+	DOREPLIFETIME(ABaseCharacter, bAiming);
+	DOREPLIFETIME(ABaseCharacter, bIsIronSight);
 }
 
 //----------------------------------------------------------------------//
@@ -439,4 +464,13 @@ void ABaseCharacter::DrawFrustum()
 	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[1], WorldCorners[5], LineColor, LineDuration, LineThickness);
 	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[2], WorldCorners[6], LineColor, LineDuration, LineThickness);
 	UKismetSystemLibrary::DrawDebugLine(GetWorld(), WorldCorners[3], WorldCorners[7], LineColor, LineDuration, LineThickness);
+}
+
+FRotator ABaseCharacter::GetAimOffset() const
+{
+	const FVector AimDirWS = GetBaseAimRotation().Vector();
+	const FVector AimDirLS = ActorToWorld().InverseTransformVectorNoScale(AimDirWS);
+	const FRotator AimRotLS = AimDirLS.Rotation();
+//	ActorToWorld().InverseTransformVectorNoScale(GetBaseAimRotation().Vector()).Rotation();
+	return AimRotLS;
 }

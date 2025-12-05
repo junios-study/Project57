@@ -88,13 +88,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Character, Replicated)
 	uint8 bSprint : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	uint8 bLeftLean : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	uint8 bRightLean : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	uint8 bAiming : 1;
 
 
@@ -128,16 +128,16 @@ public:
 	void ReloadWeapon();
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	float CurrentHP = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	float MaxHP = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	uint8 bIsFire : 1 = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
 	uint8 bIsIronSight : 1 = false;
 
 
@@ -170,6 +170,15 @@ public:
 	void StartIronSight();
 
 	void StopIronSight();
+
+	UFUNCTION(Server, Reliable)
+	void C2S_StartIronSight();
+	void C2S_StartIronSight_Implementation();
+
+	UFUNCTION(Server, Reliable)
+	void C2S_StopIronSight();
+	void C2S_StopIronSight_Implementation();
+
 	
 	void StartSprint();
 
@@ -209,5 +218,7 @@ public:
 	
 	void DrawFrustum();
 
+
+	FRotator GetAimOffset() const;
 
 };
