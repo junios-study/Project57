@@ -137,10 +137,24 @@ void ABaseCharacter::DoFire()
 void ABaseCharacter::StartFire()
 {
 	bIsFire = true;
+	C2S_StartFire();
+
+}
+
+
+void ABaseCharacter::StopFire()
+{
+	bIsFire = false;
+	C2S_StopFire();
+}
+
+void ABaseCharacter::C2S_StartFire_Implementation()
+{
+	bIsFire = true;
 	DoFire();
 }
 
-void ABaseCharacter::StopFire()
+void ABaseCharacter::C2S_StopFire_Implementation()
 {
 	bIsFire = false;
 	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
@@ -149,6 +163,7 @@ void ABaseCharacter::StopFire()
 		ChildWeapon->StopFire();
 	}
 }
+
 
 void ABaseCharacter::HitReaction()
 {

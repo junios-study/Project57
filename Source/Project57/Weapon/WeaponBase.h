@@ -82,4 +82,5 @@ public:
 
 	FTimerHandle RefireTimer;
 
+	bool CalculateShootData(FVector& OutSpawnLocation, FVector& OutTargetLocation, FVector& OutBulletDirection, FRotator& OutAimRotation);
 };
