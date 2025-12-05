@@ -81,24 +81,27 @@ void AWeaponBase::Fire()
 	//	//Calculate
 	FVector SpawnLocation;
 	FVector TargetLocation;
-	FVector BulletDirection;
+	//FVector BulletDirection;
 	FRotator AimRotation;
 	FHitResult HitResult;
 
-	bool bResult = CalculateShootData(SpawnLocation, TargetLocation, BulletDirection, AimRotation);
-	if (!bResult)
-	{
-		return;
-	}
+	//화면 가운데 기준이 아니라 총 Muzzle 앞 방향으로 발사.
+	SpawnLocation = Mesh->GetSocketLocation(TEXT("Muzzle"));
+	FVector WeaponForward = Mesh->GetSocketRotation(TEXT("Muzzle")).Vector().GetSafeNormal();
+	TargetLocation = SpawnLocation + (WeaponForward * 100000.0f);
+	AimRotation = UKismetMathLibrary::FindLookAtRotation(SpawnLocation, TargetLocation + (UKismetMathLibrary::RandomUnitVector() * 0.3f));
+
+	//bool bResult = CalculateShootData(SpawnLocation, TargetLocation, BulletDirection, AimRotation);
+	//if (!bResult)
+	//{
+	//	return;
+	//}
 
 	FireProjectile(FTransform(AimRotation, SpawnLocation, FVector::OneVector),
 		HitResult);
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash,
-		SpawnLocation,
-		AimRotation
-			
-	);
+	//호출은 서버에서 모든 클라이언에서 실행
+	S2A_SpawnMuzzleFlash(SpawnLocation, AimRotation);
 
 	//Recoil
 	Character->AddControllerPitchInput(-0.05f);
@@ -184,6 +187,15 @@ bool AWeaponBase::CalculateShootData(FVector& OutSpawnLocation, FVector& OutTarg
 	OutAimRotation = UKismetMathLibrary::FindLookAtRotation(OutSpawnLocation, OutTargetLocation + (UKismetMathLibrary::RandomUnitVector() * 0.3f));
 	
 	return true;
+}
+
+//Execute Client 실행
+void AWeaponBase::S2A_SpawnMuzzleFlash_Implementation(const FVector& SpawnLocation, const FRotator& AimRotation)
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash,
+		SpawnLocation,
+		AimRotation
+	);
 }
 
 
