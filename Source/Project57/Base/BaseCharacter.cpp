@@ -382,7 +382,7 @@ void ABaseCharacter::C2S_StopSprint_Implementation()
 void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
 	DOREPLIFETIME(ABaseCharacter, bSprint);
 	DOREPLIFETIME(ABaseCharacter, CurrentHP);
 	DOREPLIFETIME(ABaseCharacter, MaxHP);

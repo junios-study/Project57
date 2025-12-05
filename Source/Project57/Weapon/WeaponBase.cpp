@@ -109,7 +109,9 @@ void AWeaponBase::Fire()
 
 	CurrentBulletCount--;
 	UE_LOG(LogTemp, Warning, TEXT("Fire %d"), CurrentBulletCount);
-	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSound, GetActorLocation());
+
+	//호출은 서버에서 모든 클라이언에서 실행
+	S2A_SpawnFireSound(SpawnLocation);
 
 	TimeofLastShoot = GetWorld()->TimeSeconds;
 
@@ -196,6 +198,11 @@ void AWeaponBase::S2A_SpawnMuzzleFlash_Implementation(const FVector& SpawnLocati
 		SpawnLocation,
 		AimRotation
 	);
+}
+
+void AWeaponBase::S2A_SpawnFireSound_Implementation(const FVector& SpawnLocation)
+{
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSound, SpawnLocation);
 }
 
 
