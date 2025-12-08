@@ -29,5 +29,8 @@ public:
 
 	UFUNCTION()
 	void ProcessChangeAliveCount(int32 InAliveCount);
+
+	UFUNCTION()
+	void ProcessHPBar(float InPercent);
 	
 };

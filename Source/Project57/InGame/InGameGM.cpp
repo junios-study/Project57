@@ -13,8 +13,6 @@ AInGameGM::AInGameGM()
 void AInGameGM::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CheckAliveCount();
 }
 
 
@@ -35,9 +33,11 @@ void AInGameGM::Logout(AController* Exiting)
 
 int32 AInGameGM::CheckAliveCount()
 {
+	int32 PlayerControllerCount = 0;
 	int32 AliveCount = 0;
 	for (auto Iter = GetWorld()->GetPlayerControllerIterator(); Iter; ++Iter)
 	{
+		++PlayerControllerCount;
 		ABaseCharacter* Pawn = Cast<ABaseCharacter>((*Iter)->GetPawn());
 		if (Pawn)
 		{
@@ -47,11 +47,26 @@ int32 AInGameGM::CheckAliveCount()
 			}
 		}
 	}
+	//PlayerController 갯수가 2개 이상이면 게임중, 생존 1일때는 종료
 
 	AInGameGS* GS = GetGameState<AInGameGS>();
 	if (GS)
 	{
 		GS->UpdateAliveCount(AliveCount);
+	}
+
+	FTimerHandle EndTimer;
+
+	if (PlayerControllerCount >= 2 && AliveCount == 1)
+	{
+		GetWorld()->GetTimerManager().SetTimer(EndTimer,
+			FTimerDelegate::CreateLambda([this]() {
+				GetWorld()->ServerTravel(TEXT("Lobby"));
+				}),
+			10.0f,
+			false,
+			0.0f
+		);
 	}
 
 	return AliveCount;

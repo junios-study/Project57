@@ -7,6 +7,8 @@
 #include "GenericTeamAgentInterface.h"
 #include "BaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPChanged, const float, Percent);
+
 class UInputAction;
 class UAIPerceptionStimuliSourceComponent;
 
@@ -141,8 +143,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReloadWeapon();
 
+	UFUNCTION()
+	void OnRep_CurrntHP();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, ReplicatedUsing = "OnRep_CurrntHP")
 	float CurrentHP = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, Replicated)
@@ -224,6 +228,8 @@ public:
 	void S2A_SpawnHitEffect_Implementation(const FHitResult& Hit);
 
 
+	UPROPERTY(BlueprintAssignable)
+	FOnHPChanged OnHPChanged;
 //----------------------------------------------------------------------//
 // IGenericTeamAgentInterface
 //----------------------------------------------------------------------//

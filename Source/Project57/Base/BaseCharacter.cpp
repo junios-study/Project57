@@ -185,6 +185,11 @@ void ABaseCharacter::ReloadWeapon()
 	}
 }
 
+void ABaseCharacter::OnRep_CurrntHP()
+{
+	OnHPChanged.Broadcast(CurrentHP / MaxHP);
+}
+
 //이건 서버에서만 처리 됨, 호출이 서버에서만 되서
 float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -227,6 +232,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 	S2A_DoHitReact(FMath::RandRange(1, 8));
 
+	OnRep_CurrntHP();
 
 	if (CurrentHP <= 0)
 	{
