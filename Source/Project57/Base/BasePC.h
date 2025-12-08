@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BasePC.generated.h"
 
+class UInGameWidget;
 /**
  * 
  */
@@ -16,5 +17,13 @@ class PROJECT57_API ABasePC : public APlayerController
 
 public:
 	ABasePC();
+
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<UInGameWidget> UITemplate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TObjectPtr<UInGameWidget> UIObject;
 	
 };

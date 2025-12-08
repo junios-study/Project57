@@ -44,7 +44,7 @@ void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		bIsFalling = Character->GetCharacterMovement()->IsFalling();
 
-		AimRotation = Character->AimRotation;
+		//AimRotation = Character->AimRotation;
 	}
 }
 

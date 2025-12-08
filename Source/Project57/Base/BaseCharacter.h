@@ -163,12 +163,12 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	void DoDeadEnd();
+	void DoDeadEnd(const FHitResult& InHitResult);
 
 
 	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
-	void S2A_DoDead(int32 Index);
-	void S2A_DoDead_Implementation(int32 Index);
+	void S2A_DoDead(int32 Index, const FHitResult& InHitResult);
+	void S2A_DoDead_Implementation(int32 Index, const FHitResult& InHitResult);
 
 
 	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)

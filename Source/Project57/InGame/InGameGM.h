@@ -14,4 +14,15 @@ class PROJECT57_API AInGameGM : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AInGameGM();
+
+	virtual void BeginPlay() override;
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	virtual void Logout(AController* Exiting) override;
+
+	int32 CheckAliveCount();
+
 };

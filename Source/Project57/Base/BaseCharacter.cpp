@@ -20,6 +20,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "../Network/NetworkUtil.h"
+#include "../InGame/InGameGM.h"
 
 
 
@@ -60,34 +61,6 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-//	FRotator HandRotation = GetMesh()->GetSocketRotation(TEXT("hand_r"));
-//
-//	FVector HandLocation = GetMesh()->GetSocketLocation(TEXT("hand_r"));
-//
-//	// 2. 컴포넌트 공간(Component Space)에서의 트랜스폼 가져오기
-//// 트랜스폼(FTransform)을 가져와서 회전(FRotator 또는 FQuat)을 추출할 수 있습니다.
-//	FTransform ComponentSpaceTransform = GetMesh()->GetSocketTransform(TEXT("hand_r"), RTS_Component);
-//	FRotator ComponentSpaceRotation = ComponentSpaceTransform.Rotator();
-//
-//	FVector HandStart = HandLocation + ComponentSpaceRotation.Vector()*1000.0f;
-//
-//	UKismetSystemLibrary::DrawDebugLine(GetWorld(), HandLocation, HandStart, FLinearColor::Green, 0.0f, 1.0f);
-//
-//
-//
-//	const FVector Start = GetCameraComponent()->GetComponentLocation();
-//	const FVector End = Start + (GetCameraComponent()->GetForwardVector());
-//
-//	const FVector AimVector = (End - Start).GetSafeNormal();
-//
-//	AimRotation = UKismetMathLibrary::FindLookAtRotation(HandStart, End);
-//
-//	UE_LOG(LogTemp, Warning, TEXT("AimRotation %s"), *AimRotation.ToString());
-//
-	AimRotation = FRotator::ZeroRotator;
-
-	//DrawFrustum();
 }
 
 // Called to bind functionality to input
@@ -217,6 +190,8 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+	FHitResult HitResult;
+
 	if (CurrentHP <= 0)
 	{
 		return DamageAmount;
@@ -231,6 +206,8 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		}
 
 		S2A_SpawnHitEffect(Event->HitInfo);
+
+		HitResult = Event->HitInfo;
 	}
 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
 	{
@@ -253,28 +230,38 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 	if (CurrentHP <= 0)
 	{
-		//죽는다. 애님 몽타주 재생
-		//네트워크 할려면 다 RPC로 작업해 됨
-		S2A_DoDead(FMath::RandRange(1, 6));
+		AInGameGM* GM = Cast<AInGameGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM)
+		{
+			GM->CheckAliveCount();
+		}
+		S2A_DoDead(FMath::RandRange(1, 6), HitResult);
 	}
 
 	return DamageAmount;
 }
 
-void ABaseCharacter::DoDeadEnd()
+void ABaseCharacter::DoDeadEnd(const FHitResult& InHitResult)
 {
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 	//SetActorEnableCollision(false);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
-	NET_LOG(TEXT("DoDeadEnd"));
+
+	GetMesh()->AddImpulse(-InHitResult.ImpactNormal * 10000.f, InHitResult.BoneName);
+
 }
 
-void ABaseCharacter::S2A_DoDead_Implementation(int32 Index)
+void ABaseCharacter::S2A_DoDead_Implementation(int32 Index, const FHitResult& InHitResult)
 {
-	FName SectionName = FName(FString::Printf(TEXT("%d"), Index));
-	float Duration = PlayAnimMontage(DeathMontage, 1.0f, SectionName);
-	NET_LOG(FString::Printf(TEXT("DoDead %s %f"), *SectionName.ToString(), Duration));
+	SetPhysicsReplicationMode(EPhysicsReplicationMode::Resimulation);
+	GetMesh()->SetIsReplicated(true);
+
+	DoDeadEnd(InHitResult);
+	//FName SectionName = FName(FString::Printf(TEXT("%d"), Index));
+	//float Duration = PlayAnimMontage(DeathMontage, 1.0f, SectionName);
+	//NET_LOG(FString::Printf(TEXT("DoDead %s %f"), *SectionName.ToString(), Duration));
 }
 
 void ABaseCharacter::S2A_DoHitReact_Implementation(int32 Index)
