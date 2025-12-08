@@ -73,8 +73,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Look(float Pitch, float Yaw);
 
-	UFUNCTION(BlueprintCallable)
-	void Reload();
+	UFUNCTION(NetMulticast, Reliable)
+	void S2A_Reload();
+	void S2A_Reload_Implementation();
+
+	UFUNCTION(Server, Reliable)
+	void C2S_Reload();
+	void C2S_Reload_Implementation();
 
 	UFUNCTION(BlueprintCallable)
 	void DoFire();
@@ -153,18 +158,22 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	UFUNCTION(BlueprintCallable)
-	virtual void SpawnHitEffect(FHitResult Hit);
+	//UFUNCTION(BlueprintCallable)
+	//virtual void SpawnHitEffect(FHitResult Hit);
 
 
 	UFUNCTION(BlueprintCallable)
 	void DoDeadEnd();
 
-	UFUNCTION(BlueprintCallable)
-	void DoDead();
 
-	UFUNCTION(BlueprintCallable)
-	void DoHitReact();
+	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
+	void S2A_DoDead(int32 Index);
+	void S2A_DoDead_Implementation(int32 Index);
+
+
+	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
+	void S2A_DoHitReact(int32 Index);
+	void S2A_DoHitReact_Implementation(int32 Index);
 
 
 	UFUNCTION()
@@ -208,6 +217,11 @@ public:
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void S2A_SpawnHitEffect(const FHitResult& Hit);
+	void S2A_SpawnHitEffect_Implementation(const FHitResult& Hit);
 
 
 //----------------------------------------------------------------------//

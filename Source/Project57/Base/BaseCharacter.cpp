@@ -99,7 +99,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UIC)
 	{
 		UIC->BindAction(IA_Reload, ETriggerEvent::Completed, this,
-			&ABaseCharacter::Reload);
+			&ABaseCharacter::C2S_Reload);
 
 		UIC->BindAction(IA_Fire, ETriggerEvent::Started, this,
 			&ABaseCharacter::StartFire);
@@ -142,13 +142,18 @@ void ABaseCharacter::Look(float Pitch, float Yaw)
 	AddControllerYawInput(Yaw);
 }
 
-void ABaseCharacter::Reload()
+void ABaseCharacter::S2A_Reload_Implementation()
 {
 	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
 	if (ChildWeapon)
 	{
 		PlayAnimMontage(ChildWeapon->ReloadMontage);
 	}
+}
+
+void ABaseCharacter::C2S_Reload_Implementation()
+{
+	S2A_Reload();
 }
 
 void ABaseCharacter::DoFire()
@@ -207,6 +212,7 @@ void ABaseCharacter::ReloadWeapon()
 	}
 }
 
+//이건 서버에서만 처리 됨, 호출이 서버에서만 되서
 float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -224,7 +230,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 			CurrentHP -= DamageAmount;
 		}
 
-		SpawnHitEffect(Event->HitInfo);
+		S2A_SpawnHitEffect(Event->HitInfo);
 	}
 	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID))
 	{
@@ -242,15 +248,14 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		UE_LOG(LogTemp, Warning, TEXT("Damage %f"), DamageAmount);
 	}
 
-	DoHitReact();
-
+	S2A_DoHitReact(FMath::RandRange(1, 8));
 
 
 	if (CurrentHP <= 0)
 	{
 		//죽는다. 애님 몽타주 재생
 		//네트워크 할려면 다 RPC로 작업해 됨
-		DoDead();
+		S2A_DoDead(FMath::RandRange(1, 6));
 	}
 
 	return DamageAmount;
@@ -258,20 +263,23 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 void ABaseCharacter::DoDeadEnd()
 {
-	GetController()->SetActorEnableCollision(false);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	//SetActorEnableCollision(false);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
+	NET_LOG(TEXT("DoDeadEnd"));
 }
 
-void ABaseCharacter::DoDead()
+void ABaseCharacter::S2A_DoDead_Implementation(int32 Index)
 {
-	FName SectionName = FName(FString::Printf(TEXT("%d"), FMath::RandRange(1, 6)));
-	PlayAnimMontage(DeathMontage, 1.0f, SectionName);
+	FName SectionName = FName(FString::Printf(TEXT("%d"), Index));
+	float Duration = PlayAnimMontage(DeathMontage, 1.0f, SectionName);
+	NET_LOG(FString::Printf(TEXT("DoDead %s %f"), *SectionName.ToString(), Duration));
 }
 
-void ABaseCharacter::DoHitReact()
+void ABaseCharacter::S2A_DoHitReact_Implementation(int32 Index)
 {
-	FName SectionName = FName(FString::Printf(TEXT("%d"), FMath::RandRange(1, 8)));
+	FName SectionName = FName(FString::Printf(TEXT("%d"), Index));
 	PlayAnimMontage(HitMontage, 1.0f, SectionName);
 }
 
@@ -420,6 +428,7 @@ void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ABaseCharacter, WeaponState);
 }
 
+
 //----------------------------------------------------------------------//
 // IGenericTeamAgentInterface
 //----------------------------------------------------------------------//
@@ -433,7 +442,7 @@ FGenericTeamId ABaseCharacter::GetGenericTeamId() const
 	return TeamID;
 }
 
-void ABaseCharacter::SpawnHitEffect(FHitResult Hit)
+void ABaseCharacter::S2A_SpawnHitEffect_Implementation(const FHitResult& Hit)
 {
 	if (BloodEffect)
 	{

@@ -166,6 +166,7 @@ void AProjectileBase::ProcessComponentHit(UPrimitiveComponent* HitComponent, AAc
 	//Server에서 처리 
 	if (Pawn)
 	{
+		//서버만 실행
 		//총쏘는 데미지
 		UGameplayStatics::ApplyPointDamage(Hit.GetActor(),
 			Damage,
