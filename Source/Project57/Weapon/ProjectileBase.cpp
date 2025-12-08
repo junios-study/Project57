@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "BaseDamageType.h"
+#include "../Network/NetworkUtil.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -28,7 +29,7 @@ AProjectileBase::AProjectileBase()
 	Movement->MaxSpeed = 8000.0f;
 	Movement->InitialSpeed = 8000.0f;
 
-	SetReplicates(true);
+	bReplicates = true;
 	SetReplicateMovement(true);
 	bNetLoadOnClient = true;
 	bNetUseOwnerRelevancy = true;
@@ -89,22 +90,82 @@ void AProjectileBase::ProcessBeginOverlap(AActor* OverlapedActor, AActor* OtherA
 	//);
 }
 
+//Server
 void AProjectileBase::ProcessComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+
 	SpawnHitEffect(Hit);
 
-	if (GetOwner())
+	//if (GetLocalRole() == ENetRole::ROLE_Authority)
+	//{
+	//	NET_LOG(TEXT("Bullet ROLE_Authority"));
+	//}
+	//else if (GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
+	//{
+	//	NET_LOG(TEXT("Bullet ROLE_AutonomousProxy"));
+	//}
+	//else if (GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+	//{
+	//	NET_LOG(TEXT("Bullet ROLE_SimulatedProxy"));
+	//}
+
+	//if (GetRemoteRole() == ENetRole::ROLE_Authority)
+	//{
+	//	NET_LOG(TEXT("Bullet Remote ROLE_Authority"));
+	//}
+	//else if (GetRemoteRole() == ENetRole::ROLE_AutonomousProxy)
+	//{
+	//	NET_LOG(TEXT("Bullet Remote ROLE_AutonomousProxy"));
+	//}
+	//else if (GetRemoteRole() == ENetRole::ROLE_SimulatedProxy)
+	//{
+	//	NET_LOG(TEXT("Bullet Remote ROLE_SimulatedProxy"));
+	//}
+
+	//
+
+	//if (GetOwner())
+	//{
+	//	NET_LOG(FString::Printf(TEXT("Bullet Owner %s"), *GetOwner()->GetName()));
+	//}
+	//else
+	//{
+	//	NET_LOG(TEXT("Bullet No Owner"));
+	//}
+
+	//if (GetOwner()->GetOwner())
+	//{
+	//	NET_LOG(FString::Printf(TEXT("Gun Owner %s"), *GetOwner()->GetOwner()->GetName()));
+	//}
+	//else
+	//{
+	//	NET_LOG(TEXT("Gun No Owner"));
+	//}
+
+	//if (GetOwner()->GetOwner()->GetOwner())
+	//{
+	//	NET_LOG(FString::Printf(TEXT("Pawn Owner %s"), *GetOwner()->GetOwner()->GetOwner()->GetName()));
+	//}
+	//else
+	//{
+	//	NET_LOG(TEXT("Pawn No Owner"));
+	//}
+
+
+	if (!HasAuthority())
 	{
 		//서버가 아니면 총알의 주인이 없다.
 		return;
 	}
 
+	//NET_LOG(FString::Printf(TEXT("%s %s"), *OtherActor->GetName(), *OtherComp->GetName()));
+
+
 	APawn* Pawn = Cast<APawn>(GetOwner()->GetOwner());
 
+	//Server에서 처리 
 	if (Pawn)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s %s"), *OtherActor->GetName(), *OtherComp->GetName());
-
 		//총쏘는 데미지
 		UGameplayStatics::ApplyPointDamage(Hit.GetActor(),
 			Damage,

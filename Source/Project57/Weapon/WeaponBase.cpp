@@ -141,6 +141,7 @@ bool AWeaponBase::CalculateShootData(FVector& OutSpawnLocation, FVector& OutTarg
 
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
+	QueryParams.AddIgnoredActor(Character);
 
 	GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, QueryParams);
 
