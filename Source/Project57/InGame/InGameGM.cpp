@@ -60,12 +60,13 @@ int32 AInGameGM::CheckAliveCount()
 	if (PlayerControllerCount >= 2 && AliveCount == 1)
 	{
 		GetWorld()->GetTimerManager().SetTimer(EndTimer,
-			FTimerDelegate::CreateLambda([this]() {
+			FTimerDelegate::CreateLambda([&]() {
+				GetWorld()->GetTimerManager().ClearTimer(EndTimer);
 				GetWorld()->ServerTravel(TEXT("Lobby"));
 				}),
 			10.0f,
 			false,
-			0.0f
+			-1.0f
 		);
 	}
 
