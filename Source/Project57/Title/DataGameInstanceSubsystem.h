@@ -27,7 +27,7 @@ public:
 	FString name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FString Result;
+	bool result;
 };
 
 

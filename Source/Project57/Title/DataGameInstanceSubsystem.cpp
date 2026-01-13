@@ -44,6 +44,16 @@ void UDataGameInstanceSubsystem::OnProcessRequestComplete(FHttpRequestPtr Reques
 
 	UE_LOG(LogTemp, Warning, TEXT("Code : %d, %s"), StatusCode, *(ResponseContent));
 
+	//JSON String to Struct
+	FLoginData LoginData;
+
+	if (FJsonObjectConverter::JsonObjectStringToUStruct<FLoginData>(ResponseContent, &LoginData, 0, 0))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("struct name  : %s, result : %d"), *LoginData.name, LoginData.result);
+	}
+
+
+	//일일이 변경
 	auto JsonReader = TJsonReaderFactory<TCHAR>::Create(ResponseContent);
 
 	TSharedPtr<FJsonObject> JsonObject;
