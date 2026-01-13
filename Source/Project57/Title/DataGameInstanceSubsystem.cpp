@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "DataGameInstanceSubsystem.h"
@@ -16,28 +16,44 @@ void UDataGameInstanceSubsystem::Deinitialize()
 void UDataGameInstanceSubsystem::Login()
 {
 	auto Request = HTTPModule->CreateRequest();
-	Request->OnProcessRequestComplete().BindUObject(
-		this,
-		&UDataGameInstanceSubsystem::OnProcessRequestComplete
-	);
 
-	FString URL = FString::Printf(TEXT("http://192.168.0.100:3000/api/login?user_id=%s&passwd=%s"), *UserID, *Password);
+	//FString JSONData = TEXT("{\"model\": \"qwen3-vl:30b\", \"prompt\": \"Ïñ∏Î¶¨Ïñ∏ ÏóîÏßÑÏùÄ Î≠êÏïº?\", \"stream\" : false}");
+	FString JSONData = TEXT("{\"model\": \"gemma3:4b\", \"prompt\": \"Ïñ∏Î¶¨Ïñ∏ ÏóîÏßÑÏùÄ Î≠êÏïº?\", \"stream\" : false}");
 
-	Request->SetURL(URL);
-	Request->SetVerb(TEXT("GET"));
+	UE_LOG(LogTemp, Warning, TEXT("JSONString : %s"), *JSONData);
 
+
+	Request->SetURL("http://192.168.0.100:11434/api/generate");
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	Request->SetContentAsString(JSONData);
+	Request->OnProcessRequestComplete().BindUObject(this, &UDataGameInstanceSubsystem::OnProcessLLMRequestComplete);
 	Request->ProcessRequest();
 }
+
+void UDataGameInstanceSubsystem::OnProcessLLMRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
+{
+	if (!bProcessedSuccessfully || !Response.IsValid())
+	{
+		//Ìò∏Ï∂ú Ïã§Ìå®
+		return;
+	}
+
+	int32 StatusCode = Response->GetResponseCode();
+	FString ResponseContent = Response->GetContentAsString();
+
+	UE_LOG(LogTemp, Warning, TEXT("Code : %d, %s"), StatusCode, *(ResponseContent));
+}
+
 
 void UDataGameInstanceSubsystem::OnProcessRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
 {
 	if (!bProcessedSuccessfully || !Response.IsValid())
 	{
-		//»£√‚ Ω«∆–
+		//Ìò∏Ï∂ú Ïã§Ìå®
 		return;
 	}
-
-	//»£√‚ µ∆¿∏≥™ º≠πˆø°º≠ ø¬ ∞·∞˙ √≥∏Æ
+	//Ìò∏Ï∂ú ÎêêÏúºÎÇò ÏÑúÎ≤ÑÏóêÏÑú Ïò® Í≤∞Í≥º Ï≤òÎ¶¨
 
 	int32 StatusCode = Response->GetResponseCode();
 	FString ResponseContent = Response->GetContentAsString();
@@ -53,7 +69,7 @@ void UDataGameInstanceSubsystem::OnProcessRequestComplete(FHttpRequestPtr Reques
 	}
 
 
-	//¿œ¿œ¿Ã ∫Ø∞Ê
+	//ÏùºÏùºÏù¥ Î≥ÄÍ≤Ω
 	auto JsonReader = TJsonReaderFactory<TCHAR>::Create(ResponseContent);
 
 	TSharedPtr<FJsonObject> JsonObject;
