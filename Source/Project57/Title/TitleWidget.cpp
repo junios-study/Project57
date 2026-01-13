@@ -27,7 +27,8 @@ void UTitleWidget::StartServer()
 void UTitleWidget::Connect()
 {
 	SaveData();
-	UGameplayStatics::OpenLevel(GetWorld(), FName(ServerIP->GetText().ToString()), true, TEXT("Option"));
+	//UGameplayStatics::OpenLevel(GetWorld(), FName(ServerIP->GetText().ToString()), true, TEXT("Option"));
+
 
 }
 
@@ -39,5 +40,7 @@ void UTitleWidget::SaveData()
 		UDataGameInstanceSubsystem* MySubsystem = GI->GetSubsystem<UDataGameInstanceSubsystem>();
 		MySubsystem->UserID = UserID->GetText().ToString();
 		MySubsystem->Password = Password->GetText().ToString();
+
+		MySubsystem->Login();
 	}
 }

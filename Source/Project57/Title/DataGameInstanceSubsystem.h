@@ -4,7 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
+#include "HttpModule.h"
+
+
+
 #include "DataGameInstanceSubsystem.generated.h"
+
+
+//struct FHttpRequestPtr;
+//struct FHttpResponsePtr;
+
+
+USTRUCT(BlueprintType)
+struct FLoginData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString Result;
+};
+
 
 /**
  *
@@ -26,5 +51,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	FString Password;
+
+	UFUNCTION(BlueprintCallable)
+	void Login();
+
+	FHttpModule* HTTPModule;
+
+	void OnProcessRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully);
 
 };

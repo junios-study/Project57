@@ -2,11 +2,56 @@
 
 
 #include "DataGameInstanceSubsystem.h"
+#include "JsonUtilities.h"
 
 void UDataGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
+	HTTPModule = &FHttpModule::Get();
 }
 
 void UDataGameInstanceSubsystem::Deinitialize()
 {
 }
+
+void UDataGameInstanceSubsystem::Login()
+{
+	auto Request = HTTPModule->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(
+		this,
+		&UDataGameInstanceSubsystem::OnProcessRequestComplete
+	);
+
+	FString URL = FString::Printf(TEXT("http://192.168.0.100:3000/api/login?user_id=%s&passwd=%s"), *UserID, *Password);
+
+	Request->SetURL(URL);
+	Request->SetVerb(TEXT("GET"));
+
+	Request->ProcessRequest();
+}
+
+void UDataGameInstanceSubsystem::OnProcessRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
+{
+	if (!bProcessedSuccessfully || !Response.IsValid())
+	{
+		//호출 실패
+		return;
+	}
+
+	//호출 됐으나 서버에서 온 결과 처리
+
+	int32 StatusCode = Response->GetResponseCode();
+	FString ResponseContent = Response->GetContentAsString();
+
+	UE_LOG(LogTemp, Warning, TEXT("Code : %d, %s"), StatusCode, *(ResponseContent));
+
+	auto JsonReader = TJsonReaderFactory<TCHAR>::Create(ResponseContent);
+
+	TSharedPtr<FJsonObject> JsonObject;
+	FJsonSerializer::Deserialize(JsonReader, JsonObject);
+
+	auto Name = JsonObject->GetField(TEXT("name"), EJson::String);
+	auto Result = JsonObject->GetField(TEXT("result"), EJson::Boolean);
+
+	UE_LOG(LogTemp, Warning, TEXT("name  : %s, result : %d"), *Name->AsString(), Result->AsBool());
+}
+
