@@ -16,6 +16,8 @@ void UTitleWidget::NativeConstruct()
 	StartServerButton->OnClicked.AddDynamic(this, &UTitleWidget::StartServer);
 	ConnectButton->OnClicked.AddDynamic(this, &UTitleWidget::Connect);
 
+	GoLLMButton->OnClicked.AddDynamic(this, &UTitleWidget::GoLLM);
+
 }
 
 void UTitleWidget::StartServer()
@@ -42,5 +44,18 @@ void UTitleWidget::SaveData()
 		MySubsystem->Password = Password->GetText().ToString();
 
 		MySubsystem->Login();
+	}
+}
+
+void UTitleWidget::GoLLM()
+{
+	UGameInstance* GI = UGameplayStatics::GetGameInstance(GetWorld());
+	if (GI)
+	{
+		UDataGameInstanceSubsystem* MySubsystem = GI->GetSubsystem<UDataGameInstanceSubsystem>();
+		MySubsystem->UserID = UserID->GetText().ToString();
+		MySubsystem->Password = Password->GetText().ToString();
+
+		MySubsystem->Ask(Question->GetText().ToString());
 	}
 }

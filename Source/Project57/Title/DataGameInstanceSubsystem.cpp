@@ -16,9 +16,25 @@ void UDataGameInstanceSubsystem::Deinitialize()
 void UDataGameInstanceSubsystem::Login()
 {
 	auto Request = HTTPModule->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(
+		this,
+		&UDataGameInstanceSubsystem::OnProcessRequestComplete
+	);
 
-	//FString JSONData = TEXT("{\"model\": \"qwen3-vl:30b\", \"prompt\": \"언리언 엔진은 뭐야?\", \"stream\" : false}");
-	FString JSONData = TEXT("{\"model\": \"gemma3:4b\", \"prompt\": \"언리언 엔진은 뭐야?\", \"stream\" : false}");
+	FString URL = FString::Printf(TEXT("http://192.168.0.100:3000/api/login?user_id=%s&passwd=%s"), *UserID, *Password);
+
+	Request->SetURL(URL);
+	Request->SetVerb(TEXT("GET"));
+
+	Request->ProcessRequest();
+}
+
+void UDataGameInstanceSubsystem::Ask(FString Question)
+{
+	auto Request = HTTPModule->CreateRequest();
+
+	FString JSONData = 
+		FString::Printf(TEXT("{\"model\": \"exaone-deep:latest\", \"prompt\": \"%s\", \"stream\" : false}"), *Question);
 
 	UE_LOG(LogTemp, Warning, TEXT("JSONString : %s"), *JSONData);
 

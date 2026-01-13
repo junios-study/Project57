@@ -55,6 +55,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Login();
 
+	UFUNCTION(BlueprintCallable)
+	void Ask(FString Question);
+
+
 	FHttpModule* HTTPModule;
 
 	void OnProcessRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully);

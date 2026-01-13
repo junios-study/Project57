@@ -28,6 +28,9 @@ public:
 	TObjectPtr<UButton> ConnectButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (WidgetBind))
+	TObjectPtr<UButton> GoLLMButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (WidgetBind))
 	TObjectPtr<UEditableTextBox> UserID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (WidgetBind))
@@ -35,6 +38,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
 	TObjectPtr<UEditableTextBox> ServerIP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (WidgetBind))
+	TObjectPtr<UEditableTextBox> Question;
 
 	virtual void NativeConstruct() override;
 
@@ -45,4 +51,7 @@ public:
 	void Connect();
 
 	void SaveData();
+
+	UFUNCTION()
+	void GoLLM();
 };
